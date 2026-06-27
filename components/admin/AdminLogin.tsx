@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from 'react';
 import { Loader2, Lock } from 'lucide-react';
-import Logo from '@/components/ui/Logo';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 
 function authErrorMessage(code: string): string {
@@ -46,16 +45,16 @@ export default function AdminLogin() {
     <div className="flex min-h-screen items-center justify-center bg-brand-navy px-4 py-12">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-8 shadow-[0_24px_64px_rgba(0,0,0,0.35)]">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="rounded-xl bg-brand-navy px-4 py-3">
-            <Logo height={56} />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/logo.svg"
+            alt="Secure Airport Transfer Limited"
+            className="h-12 w-auto max-w-[260px] object-contain"
+          />
           <p className="mt-4 font-accent text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-gold">
             Admin Console
           </p>
           <h1 className="mt-2 font-display text-2xl font-bold text-brand-navy">Sign in</h1>
-          <p className="mt-2 text-sm text-brand-muted">
-            Use your Firebase admin email and password to access leads and settings.
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
