@@ -29,7 +29,7 @@ const services = [
     label: 'AIRLINE OPERATIONS',
     title: 'Airline & Crew Logistics',
     description:
-      'Time-critical ground transport for flight crews, cabin staff, and airline operators — synchronized to live flight schedules with zero margin for error. Our operations team coordinates multi-vehicle movements, delay adjustments, and manifest management across every major UK aviation hub.',
+      'Time-critical ground transport for flight crews, cabin staff, and airline operators, synchronized to live flight schedules with zero margin for error. Our operations team coordinates multi-vehicle movements, delay adjustments, and manifest management across every major UK aviation hub.',
     benefits: [
       'Flight-Schedule Synced Pickups',
       'Multi-Vehicle Crew Coordination',
@@ -48,7 +48,7 @@ const services = [
     label: 'VIP SERVICES',
     title: 'Executive Airport Concierge',
     description:
-      'Premium meet-and-greet arrivals, real-time flight tracking, and VIP chauffeur services for senior executives and international delegations. Discreet, first-class ground transport from touchdown to final destination — coordinated by dedicated concierge operations staff.',
+      'Premium meet-and-greet arrivals, real-time flight tracking, and VIP chauffeur services for senior executives and international delegations. Discreet, first-class ground transport from touchdown to final destination, coordinated by dedicated concierge operations staff.',
     benefits: [
       'Chauffeur Meet & Greet',
       'Real-Time Flight Monitoring',

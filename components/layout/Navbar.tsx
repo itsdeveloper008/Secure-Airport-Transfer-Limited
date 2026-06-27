@@ -40,7 +40,7 @@ export default function Navbar() {
       <header className="fixed inset-x-0 top-0 z-[110] pt-2 md:pt-2.5 lg:pt-3">
         <div className="zone">
           <nav className="nav-pill relative" aria-label="Main navigation">
-            <Link href="/" aria-label="Secure Airport Transfer Limited — Home" className="shrink-0">
+            <Link href="/" aria-label="Secure Airport Transfer Limited home" className="shrink-0">
               <Logo />
             </Link>
 

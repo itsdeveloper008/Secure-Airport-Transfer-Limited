@@ -98,7 +98,7 @@ export default function FleetExperience({ variant = 'home' }: { variant?: 'home'
               </h2>
 
               <p className="mt-6 max-w-lg text-base leading-relaxed text-brand-muted md:text-lg">
-                From executive saloons and luxury MPVs to VIP chauffeur vehicles — our nationwide
+                From executive saloons and luxury MPVs to VIP chauffeur vehicles, our nationwide
                 fleet is maintained to the highest corporate standards for airport transfers,
                 business travel, and enterprise mobility.
               </p>

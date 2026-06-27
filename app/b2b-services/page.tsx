@@ -24,7 +24,7 @@ const sections = [
   {
     label: 'AIRLINE OPERATIONS',
     title: 'Airline & Crew Logistics',
-    body: 'Time-critical ground transport for flight crews and airline operators — synchronized to live flight schedules with zero margin for error across every major UK aviation hub.',
+    body: 'Time-critical ground transport for flight crews and airline operators, synchronized to live flight schedules with zero margin for error across every major UK aviation hub.',
     features: [
       'Flight-Schedule Synced Pickups',
       'Multi-Vehicle Crew Coordination',

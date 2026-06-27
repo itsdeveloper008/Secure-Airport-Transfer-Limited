@@ -44,7 +44,7 @@ export default function Hero() {
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
               Premium corporate fleet management, airline crew logistics, and VIP chauffeur
-              services across every major UK aviation hub — built for enterprise reliability.
+              services across every major UK aviation hub, built for enterprise reliability.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-5">

@@ -74,7 +74,7 @@ export default function Footer() {
     <footer className="w-full bg-[#F9FAFB]">
       {/* Top CTA */}
       <div className="zone border-b border-brand-navy/[0.08] py-16 text-center lg:py-20">
-        <Link href="/" className="mx-auto inline-block" aria-label="Secure Airport Transfer Limited — Home">
+        <Link href="/" className="mx-auto inline-block" aria-label="Secure Airport Transfer Limited home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={LOGO_SRC}
@@ -139,7 +139,7 @@ export default function Footer() {
           <Link
             href="/"
             className="flex items-center justify-center sm:justify-start"
-            aria-label="Secure Airport Transfer Limited — Home"
+            aria-label="Secure Airport Transfer Limited home"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

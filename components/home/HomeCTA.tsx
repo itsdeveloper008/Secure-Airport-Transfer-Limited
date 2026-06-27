@@ -81,7 +81,7 @@ export default function HomeCTA() {
             <span className="text-[clamp(1.85rem,3.8vw,3rem)] text-brand-gold">Across the UK</span>
           </h2>
           <p className="body-gap mx-auto max-w-2xl text-base leading-relaxed text-brand-muted md:text-lg">
-            Executive airport transfers, airline crew logistics, and nationwide fleet management —
+            Executive airport transfers, airline crew logistics, and nationwide fleet management,
             built for travel managers, procurement teams, and enterprise organisations.
           </p>
         </motion.div>

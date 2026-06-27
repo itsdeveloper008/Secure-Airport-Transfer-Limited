@@ -27,7 +27,7 @@ const benefits = [
   {
     icon: FileText,
     title: 'Consolidated Billing',
-    desc: 'Single monthly invoice across all UK cities — eliminating per-trip administration overhead.',
+    desc: 'Single monthly invoice across all UK cities, eliminating per-trip administration overhead.',
   },
   {
     icon: ShieldCheck,
@@ -47,7 +47,7 @@ const benefits = [
   {
     icon: Car,
     title: 'Executive Fleet Standards',
-    desc: 'Premium vehicles only — professionally maintained, executive-class, and chauffeur-operated.',
+    desc: 'Premium vehicles only, professionally maintained, executive-class, and chauffeur-operated.',
   },
 ];
 

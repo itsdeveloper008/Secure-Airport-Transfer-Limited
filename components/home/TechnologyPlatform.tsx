@@ -16,7 +16,7 @@ const sidebarModules = [
 
 const liveRoutes = [
   { id: 'SAT-2847', from: 'LHR', to: 'City of London', status: 'En Route', eta: '14 min' },
-  { id: 'SAT-2848', from: 'MAN', to: 'Manchester HQ', status: 'Arrived', eta: '—' },
+  { id: 'SAT-2848', from: 'MAN', to: 'Manchester HQ', status: 'Arrived', eta: '-' },
   { id: 'SAT-2849', from: 'EDI', to: 'Edinburgh Airport', status: 'Dispatched', eta: '22 min' },
   { id: 'SAT-2850', from: 'BHX', to: 'Birmingham NEC', status: 'En Route', eta: '8 min' },
   { id: 'SAT-2851', from: 'STN', to: 'Crew Hotel', status: 'Monitoring', eta: '31 min' },
