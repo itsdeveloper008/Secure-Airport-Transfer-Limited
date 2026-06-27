@@ -131,6 +131,10 @@
   .nav-pill {
     @apply flex w-full items-center justify-between rounded-full border border-gray-200/90 bg-white/95 px-4 py-1.5 shadow-[0_8px_32px_rgba(7,26,53,0.12)] backdrop-blur-xl lg:px-6 lg:py-2;
   }
+
+  .marquee-wrap:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 @layer utilities {
