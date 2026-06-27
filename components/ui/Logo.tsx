@@ -21,7 +21,9 @@ export function LogoMark({ className = 'h-10 w-10' }: { className?: string }) {
 }
 
 export default function Logo({ large = false, plain = true, className = '', height: heightProp }: LogoProps) {
-  const height = heightProp ?? (large ? 88 : 56);
+  const defaultHeight = large ? 88 : 56;
+  const useInlineHeight = heightProp !== undefined;
+  const height = heightProp ?? defaultHeight;
 
   const image = (
     // eslint-disable-next-line @next/next/no-img-element
@@ -30,8 +32,8 @@ export default function Logo({ large = false, plain = true, className = '', heig
       alt="Secure Airport Transfer Limited"
       width={320}
       height={320}
-      className={`block object-contain ${className}`}
-      style={{ height, width: 'auto' }}
+      className={`block h-10 w-auto object-contain sm:h-11 lg:h-[52px] ${className}`}
+      style={useInlineHeight ? { height, width: 'auto' } : undefined}
     />
   );
 

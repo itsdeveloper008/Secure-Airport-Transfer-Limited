@@ -6,10 +6,13 @@
   html {
     scroll-behavior: smooth;
     background-color: #ffffff;
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-brand-white font-sans text-brand-text antialiased;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
 
   ::selection {
@@ -34,7 +37,7 @@
   }
 
   .section-pad {
-    @apply py-section-sm lg:py-section;
+    @apply py-section-sm md:py-20 lg:py-section;
   }
 
   /* Standard content section with vertical breathing room */
@@ -126,7 +129,7 @@
 
   /* Floating pill navbar */
   .nav-pill {
-    @apply flex w-full items-center justify-between rounded-full border border-gray-200/90 bg-white/95 px-5 py-3 shadow-[0_8px_32px_rgba(7,26,53,0.12)] backdrop-blur-xl lg:px-8 lg:py-3.5;
+    @apply flex w-full items-center justify-between rounded-full border border-gray-200/90 bg-white/95 px-4 py-1.5 shadow-[0_8px_32px_rgba(7,26,53,0.12)] backdrop-blur-xl lg:px-6 lg:py-2;
   }
 }
 

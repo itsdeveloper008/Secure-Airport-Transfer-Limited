@@ -95,11 +95,11 @@ export default function CorporateServices() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid w-full items-stretch gap-0 lg:grid-cols-2">
+          <div className="grid w-full items-stretch gap-0 md:grid-cols-2">
             {/* Image — flush to top, no section padding */}
             <div
-              className={`relative min-h-[280px] sm:min-h-[340px] lg:min-h-[min(55vh,520px)] ${
-                i % 2 === 1 ? 'lg:order-2' : ''
+              className={`relative min-h-[240px] sm:min-h-[300px] md:min-h-[360px] lg:min-h-[min(55vh,520px)] ${
+                i % 2 === 1 ? 'md:order-2' : ''
               }`}
             >
               <div className="group relative h-full min-h-[inherit] w-full overflow-hidden">
@@ -116,7 +116,7 @@ export default function CorporateServices() {
             {/* Content */}
             <div
               className={`flex flex-col justify-center px-[clamp(1.25rem,5vw,5rem)] py-10 sm:py-12 lg:py-14 ${
-                i % 2 === 1 ? 'lg:order-1' : ''
+                i % 2 === 1 ? 'md:order-1' : ''
               }`}
             >
               <p className="font-accent text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-gold">
