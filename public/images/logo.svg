@@ -1,0 +1,11 @@
+<svg width="300" height="48" viewBox="0 0 300 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Secure Airport Transfer">
+  <circle cx="24" cy="24" r="22" fill="#071A35"/>
+  <circle cx="24" cy="24" r="21" stroke="#C9A227" stroke-width="1.5"/>
+  <path d="M13 28.5C13 27.2 14 26 15.5 26H17.5L20 22.5H28.5L31 26H33.5C35 26 36 27.2 36 28.5V30.5H13V28.5Z" fill="#FFFFFF"/>
+  <path d="M21 22.5L22.5 20H26L27.5 22.5H21Z" fill="#2563EB"/>
+  <circle cx="17.5" cy="30.5" r="2" fill="#C9A227"/>
+  <circle cx="31.5" cy="30.5" r="2" fill="#C9A227"/>
+  <path d="M24 13L27 17.5H30.5L26.5 18.5L27.5 22L24 20L20.5 22L21.5 18.5L17.5 17.5H21L24 13Z" fill="#C9A227"/>
+  <text x="56" y="21" fill="#071A35" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700">Secure Airport Transfer</text>
+  <text x="56" y="36" fill="#C9A227" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" letter-spacing="0.14em">EXECUTIVE GROUND TRANSPORT</text>
+</svg>
