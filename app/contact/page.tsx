@@ -81,10 +81,16 @@ export default function ContactPage() {
             ground transport across every major UK airport hub.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button href="/b2b-services" variant="outline-dark" aria-label="View B2B services">
+            <Button href="/b2b-services" variant="outline-light" aria-label="View B2B services">
               B2B Services
             </Button>
-            <Button href={`mailto:${CONTACT_EMAIL}`} variant="gold" showArrow aria-label="Email corporate operations">
+            <Button
+              href={`mailto:${CONTACT_EMAIL}`}
+              variant="blue"
+              showArrow
+              className="shadow-[0_8px_24px_rgba(37,99,235,0.28)]"
+              aria-label="Email corporate operations"
+            >
               Email Operations
             </Button>
           </div>
