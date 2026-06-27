@@ -17,6 +17,11 @@ import {
 
 const containerStyle = { width: '100%', height: '100%' };
 
+function isValidGoogleMapsKey(key: string): boolean {
+  const trimmed = key.trim();
+  return trimmed.startsWith('AIza') && !trimmed.includes('your_');
+}
+
 function buildGoogleMarkerIcon(active: boolean, hovered: boolean): google.maps.Icon | undefined {
   if (typeof google === 'undefined') return undefined;
   const size = hovered || active ? 44 : 36;
@@ -103,6 +108,17 @@ function CooperativeScrollZoom({ onScrollWithoutModifier }: { onScrollWithoutMod
   return null;
 }
 
+function MapResizeFix() {
+  const map = useMap();
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => map.invalidateSize(), 150);
+    return () => window.clearTimeout(timer);
+  }, [map]);
+
+  return null;
+}
+
 function LeafletMapView() {
   const [selected, setSelected] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
@@ -117,14 +133,15 @@ function LeafletMapView() {
     typeof navigator !== 'undefined' && /Mac|iPhone|iPod|iPad/i.test(navigator.userAgent);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full min-h-[min(60vh,560px)]">
       <MapContainer
         center={[MAP_CENTER.lat, MAP_CENTER.lng]}
         zoom={MAP_ZOOM}
-        className="h-full w-full"
+        className="h-full w-full min-h-[min(60vh,560px)]"
         zoomControl
         scrollWheelZoom={false}
       >
+        <MapResizeFix />
         <CooperativeScrollZoom onScrollWithoutModifier={() => setShowHint(true)} />
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
@@ -158,16 +175,23 @@ function LeafletMapView() {
 }
 
 function GoogleMapView({
+  apiKey,
   selected,
   hovered,
   onSelect,
   onHover,
 }: {
+  apiKey: string;
   selected: AirportLocation | null;
   hovered: string | null;
   onSelect: (a: AirportLocation | null) => void;
   onHover: (code: string | null) => void;
 }) {
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: apiKey,
+    id: 'satl-google-map',
+  });
+
   const options = useMemo(
     () => ({
       styles: darkMapStyles,
@@ -179,8 +203,11 @@ function GoogleMapView({
       gestureHandling: 'cooperative' as const,
       backgroundColor: '#071A35',
     }),
-    []
+    [],
   );
+
+  if (loadError) return <LeafletMapView />;
+  if (!isLoaded) return <MapLoader />;
 
   return (
     <GoogleMap
@@ -231,22 +258,14 @@ function MapLoader() {
 
 export default function UKCoverageMap() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
+  const googleMapsKey = isValidGoogleMapsKey(apiKey) ? apiKey.trim() : '';
   const [selected, setSelected] = useState<AirportLocation | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: apiKey || ' ',
-    id: 'satl-google-map',
-  });
-
-  const useGoogle = Boolean(apiKey && !loadError && isLoaded);
-
   if (!mounted) return <MapLoader />;
-
-  if (apiKey && !loadError && !isLoaded) return <MapLoader />;
 
   return (
     <motion.div
@@ -255,8 +274,9 @@ export default function UKCoverageMap() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      {useGoogle ? (
+      {googleMapsKey ? (
         <GoogleMapView
+          apiKey={googleMapsKey}
           selected={selected}
           hovered={hovered}
           onSelect={setSelected}

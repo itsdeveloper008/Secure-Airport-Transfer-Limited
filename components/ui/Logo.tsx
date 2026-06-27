@@ -30,7 +30,7 @@ export default function Logo({ large = false, plain = true, className = '', heig
       alt="Secure Airport Transfer Limited"
       width={320}
       height={320}
-      className={`block rounded-md object-contain ${className}`}
+      className={`block object-contain ${className}`}
       style={{ height, width: 'auto' }}
     />
   );

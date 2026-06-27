@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { Loader2, Lock } from 'lucide-react';
+import Logo from '@/components/ui/Logo';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 
 function authErrorMessage(code: string): string {
@@ -45,12 +46,7 @@ export default function AdminLogin() {
     <div className="flex min-h-screen items-center justify-center bg-brand-navy px-4 py-12">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-8 shadow-[0_24px_64px_rgba(0,0,0,0.35)]">
         <div className="mb-8 flex flex-col items-center text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/logo.svg"
-            alt="Secure Airport Transfer Limited"
-            className="h-12 w-auto max-w-[260px] object-contain"
-          />
+          <Logo height={72} className="rounded-none" />
           <p className="mt-4 font-accent text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-gold">
             Admin Console
           </p>
