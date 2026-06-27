@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { addLead, readLeads, updateLeadStatus } from '@/lib/admin/dataStore';
 import type { CreateLeadInput, LeadStatus } from '@/lib/admin/types';
+import { unauthorizedResponse, verifyAdminToken } from '@/lib/firebase/verifyAdmin';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!(await verifyAdminToken(request))) return unauthorizedResponse();
+
   const leads = await readLeads();
   return NextResponse.json(leads);
 }
@@ -47,6 +50,8 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  if (!(await verifyAdminToken(request))) return unauthorizedResponse();
+
   try {
     const { id, status } = (await request.json()) as { id: string; status: LeadStatus };
     if (!id || !status) {

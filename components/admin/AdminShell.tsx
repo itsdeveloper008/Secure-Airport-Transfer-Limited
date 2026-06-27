@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   ExternalLink,
   LayoutDashboard,
+  LogOut,
   Menu,
   Settings,
   Users,
@@ -12,6 +13,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import Logo from '@/components/ui/Logo';
+import AdminLogin from '@/components/admin/AdminLogin';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -22,6 +25,19 @@ const navItems = [
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, loading, signOut } = useAdminAuth();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#eef1f5] text-sm text-brand-muted">
+        Loading…
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <AdminLogin />;
+  }
 
   const isActive = (href: string, exact: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
@@ -124,9 +140,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
                 Live
               </span>
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-navy text-xs font-bold text-white">
-                SA
-              </div>
+              <span className="max-w-[180px] truncate text-xs text-brand-muted">{user.email}</span>
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className="flex items-center gap-2 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-brand-navy transition-colors hover:bg-gray-50"
+              >
+                <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
+                Sign out
+              </button>
             </div>
           </header>
 
