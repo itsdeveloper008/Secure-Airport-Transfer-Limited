@@ -100,5 +100,13 @@ export function getHub(code: string): AirportHub | undefined {
   return AIRPORT_HUBS.find((h) => h.code === code);
 }
 
+export const REGISTERED_OFFICE = {
+  line1: '124 City Road',
+  line2: 'London',
+  line3: 'EC1V 2NX',
+};
+
+export const REGISTERED_OFFICE_FULL = '124 City Road, London, EC1V 2NX';
+
 export const COMPANY_LEGAL =
-  'SECURE AIRPORT TRANSFER LIMITED is a private limited company registered in England and Wales. Company Registration Number: 15018607. Registered Office: Apex House 2nd Floor, Office 2a, Grand Arcade, North Finchley, London, England, N12 0EH.';
+  `SECURE AIRPORT TRANSFER LIMITED is a private limited company registered in England and Wales. Company Registration Number: 15018607. Registered Office: ${REGISTERED_OFFICE_FULL}.`;

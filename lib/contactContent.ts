@@ -1,12 +1,8 @@
-import { AIRPORT_HUBS } from '@/lib/constants';
+import { AIRPORT_HUBS, REGISTERED_OFFICE } from '@/lib/constants';
 
 export const CONTACT_EMAIL = 'operations@secureairporttransfer.co.uk';
 
-export const REGISTERED_OFFICE = {
-  line1: 'Apex House, 2nd Floor, Office 2a',
-  line2: 'Grand Arcade, North Finchley',
-  line3: 'London, England, N12 0EH',
-};
+export { REGISTERED_OFFICE };
 
 export const CONTACT_INFO_CARDS = [
   {
