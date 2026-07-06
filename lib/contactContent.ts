@@ -58,8 +58,9 @@ export const FORM_FIELDS = {
     placeholder: 'name@company.co.uk',
   },
   phone: {
-    label: 'Phone number',
-    placeholder: '+44 20 0000 0000',
+    label: 'UK phone number',
+    placeholder: '+44 7700 900123',
+    hint: 'UK numbers only — start with +44 or 0.',
   },
   spend: {
     label: 'Estimated monthly travel spend',

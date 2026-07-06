@@ -12,6 +12,9 @@ const firebaseConfig = {
 
 export function getClientApp() {
   if (getApps().length > 0) return getApp();
+  if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || !process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+    throw new Error('Firebase client is not configured.');
+  }
   return initializeApp(firebaseConfig);
 }
 

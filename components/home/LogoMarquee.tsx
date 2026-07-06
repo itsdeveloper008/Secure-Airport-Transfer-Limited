@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { partnerLogos } from '@/lib/partnerLogos';
+import PartnerLogoImage from '@/components/ui/PartnerLogoImage';
 
 export default function LogoMarquee() {
   const track = [...partnerLogos, ...partnerLogos];
@@ -17,15 +17,13 @@ export default function LogoMarquee() {
             <div
               key={`${logo.name}-${index}`}
               className="group flex shrink-0 items-center justify-center px-2"
-              title={logo.name}
               aria-hidden={index >= partnerLogos.length}
             >
-              <Image
+              <PartnerLogoImage
                 src={logo.src}
-                alt={logo.name}
-                width={240}
-                height={64}
-                className="h-10 w-auto max-w-[170px] object-contain opacity-50 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:h-12 sm:max-w-[200px] lg:h-14 lg:max-w-[220px]"
+                name={logo.name}
+                color={logo.color}
+                className="h-10 w-[140px] transition-transform duration-300 group-hover:scale-105 sm:h-12 sm:w-[170px] lg:h-14 lg:w-[200px]"
               />
             </div>
           ))}

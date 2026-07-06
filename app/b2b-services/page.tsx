@@ -13,37 +13,61 @@ const sections = [
     label: 'CORPORATE SOLUTIONS',
     title: 'Corporate Fleet Accounts',
     body: 'Manage executive travel across multiple UK cities through a centralized account structure designed for procurement teams, travel managers, and enterprise organizations.',
+    details:
+      'Corporate accounts include structured onboarding, consolidated monthly invoicing, named account management, and service-level reporting across every UK airport hub. Travel policies, cost-centre billing, and operational dashboards give procurement teams full visibility without managing multiple local suppliers.',
     features: [
       'Centralized UK-Wide Management',
       'Consolidated Monthly Billing',
       'Dedicated Account Manager',
       'Real-Time Operational Reporting',
     ],
+    highlights: [
+      'Multi-city account structure with single point of contact',
+      'Monthly SLA and journey analytics for procurement review',
+      'Traveller profiles, approval workflows, and cost-centre billing',
+    ],
     image: '/images/b2b-fleet-accounts.jpg',
+    learnMoreHref: '/contact',
   },
   {
     label: 'AIRLINE OPERATIONS',
     title: 'Airline & Crew Logistics',
     body: 'Time-critical ground transport for flight crews and airline operators, synchronized to live flight schedules with zero margin for error across every major UK aviation hub.',
+    details:
+      'Our airline operations desk coordinates manifest-based crew movements, standby vehicle deployment for delays, and real-time schedule adjustments across LHR, MAN, BHX, and regional UK airports. Encrypted communication with airline ops teams ensures crews reach hotels, briefing centres, and repositioning flights on time.',
     features: [
       'Flight-Schedule Synced Pickups',
       'Multi-Vehicle Crew Coordination',
       'Real-Time Delay Adjustments',
       'Nationwide Airport Coverage',
     ],
+    highlights: [
+      'Live flight monitoring integrated with dispatch',
+      'Multi-vehicle coordination for wide-body crew movements',
+      '24/7 airline operations desk with escalation protocols',
+    ],
     image: '/images/b2b-airline-logistics.jpg',
+    learnMoreHref: '/contact',
   },
   {
     label: 'VIP SERVICES',
     title: 'Executive Airport Concierge',
     body: 'Premium meet-and-greet arrivals, real-time flight tracking, and VIP chauffeur services for senior executives and international delegations.',
+    details:
+      'From touchdown to final destination, our concierge team manages meet-and-greet coordination, terminal arrivals, luggage assistance, and onward travel to hotels or corporate offices. Discreet chauffeur operations support board-level visitors, diplomatic travel, and high-profile executive itineraries nationwide.',
     features: [
       'Chauffeur Meet & Greet',
       'Real-Time Flight Monitoring',
       'Executive-Class Vehicles',
       'Hotel & Onward Coordination',
     ],
+    highlights: [
+      'Terminal meet-and-greet with named chauffeur contact',
+      'VIP saloon and chauffeur fleet for discreet travel',
+      'Hotel, conference, and onward connection coordination',
+    ],
     image: '/images/b2b-executive-concierge.jpg',
+    learnMoreHref: '/contact',
   },
 ];
 
@@ -73,6 +97,7 @@ export default function B2BServicesPage() {
                 </h2>
                 <div className="my-6 h-px w-16 bg-gradient-to-r from-brand-gold to-transparent" />
                 <p className="text-lg leading-relaxed text-brand-muted md:text-xl">{s.body}</p>
+                <p className="mt-4 text-base leading-relaxed text-brand-muted">{s.details}</p>
                 <ul className="mt-8 space-y-4">
                   {s.features.map((f) => (
                     <li key={f} className="flex items-start gap-3 text-brand-text">
@@ -81,6 +106,18 @@ export default function B2BServicesPage() {
                     </li>
                   ))}
                 </ul>
+                <ul className="mt-6 space-y-2 border-t border-brand-navy/10 pt-6">
+                  {s.highlights.map((h) => (
+                    <li key={h} className="text-sm leading-relaxed text-brand-muted">
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8">
+                  <Button href={s.learnMoreHref} variant="blue" showArrow aria-label={`Learn more about ${s.title}`}>
+                    Learn More
+                  </Button>
+                </div>
               </div>
               <div className={`relative min-h-[360px] overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(7,26,53,0.12)] ${i % 2 === 1 ? 'lg:order-1' : ''}`}>
                 <Image src={s.image} alt={s.title} fill className="object-cover" sizes="50vw" />

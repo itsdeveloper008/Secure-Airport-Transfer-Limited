@@ -20,6 +20,7 @@ import { getClientAuth } from '@/lib/firebase/client';
 type AdminAuthContextValue = {
   user: User | null;
   loading: boolean;
+  configError: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   getIdToken: () => Promise<string | null>;
@@ -30,14 +31,50 @@ const AdminAuthContext = createContext<AdminAuthContextValue | null>(null);
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [configError, setConfigError] = useState<string | null>(null);
 
   useEffect(() => {
-    const auth = getClientAuth();
-    const unsubscribe = onAuthStateChanged(auth, (nextUser) => {
-      setUser(nextUser);
+    let active = true;
+
+    const timeout = window.setTimeout(() => {
+      if (!active) return;
       setLoading(false);
-    });
-    return unsubscribe;
+      setConfigError((prev) => prev ?? 'Authentication is taking longer than expected. Refresh the page and try again.');
+    }, 12000);
+
+    try {
+      const auth = getClientAuth();
+      const unsubscribe = onAuthStateChanged(
+        auth,
+        (nextUser) => {
+          if (!active) return;
+          window.clearTimeout(timeout);
+          setUser(nextUser);
+          setLoading(false);
+          setConfigError(null);
+        },
+        (error) => {
+          if (!active) return;
+          window.clearTimeout(timeout);
+          setConfigError(error.message || 'Could not connect to authentication.');
+          setLoading(false);
+        },
+      );
+
+      return () => {
+        active = false;
+        window.clearTimeout(timeout);
+        unsubscribe();
+      };
+    } catch (err) {
+      window.clearTimeout(timeout);
+      const message = err instanceof Error ? err.message : 'Firebase is not configured.';
+      setConfigError(message);
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
@@ -55,8 +92,8 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ user, loading, signIn, signOut, getIdToken }),
-    [user, loading, signIn, signOut, getIdToken],
+    () => ({ user, loading, configError, signIn, signOut, getIdToken }),
+    [user, loading, configError, signIn, signOut, getIdToken],
   );
 
   return <AdminAuthContext.Provider value={value}>{children}</AdminAuthContext.Provider>;

@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Users, Wifi, Clock, Plane, Building2, Shield } from 'lucide-react';
+import { ArrowRight, Users, Wifi, Clock, Plane, Building2, Shield } from 'lucide-react';
 
 const headerStats = [
   'Executive Fleet',
@@ -20,6 +21,8 @@ const showcases = [
     subtitle: 'Mercedes S-Class · Mercedes E-Class',
     description:
       'The preferred choice for senior executives, business travellers, and corporate airport transfers. Designed for comfort, discretion, and reliability across the UK\'s major business centres and aviation hubs.',
+    details:
+      'Mercedes S-Class and E-Class vehicles are maintained to corporate standards with professional chauffeurs, climate control, Wi-Fi on request, and discreet branding. Ideal for airport transfers, city-to-city executive travel, and board-level appointments.',
     homeImage: '/images/service-ser-1.png',
     pageImage: '/images/tech-fleet-saloon.jpg',
     bg: 'bg-brand-white',
@@ -39,6 +42,8 @@ const showcases = [
     subtitle: 'Mercedes V-Class · Executive Group Transport',
     description:
       'Mercedes V-Class and premium multi-purpose vehicles for executive teams, conference logistics, hotel transfers, and airline crew movements. Spacious, refined, and operationally flexible for group transport at scale.',
+    details:
+      'Executive MPVs accommodate teams of up to seven passengers with luggage capacity for conference groups, hotel shuttles, and airline crew repositioning. Flexible seating and premium interiors support multi-stop itineraries across UK airport networks.',
     homeImage: '/images/service-ser-2.png',
     pageImage: '/images/tech-fleet-mpv.jpg',
     bg: 'bg-brand-gray',
@@ -58,6 +63,8 @@ const showcases = [
     subtitle: 'Premium Chauffeur · Executive Airport Transfers',
     description:
       'Ultra-premium chauffeur vehicles for VIP executive transfers, private aviation connections, meet-and-greet services, and discreet board-level travel. The definitive first-class ground transport experience.',
+    details:
+      'VIP chauffeur operations include terminal meet-and-greet, private aviation FBO connections, and fully discreet travel for high-profile executives. Chauffeurs are briefed on itinerary, security requirements, and passenger preferences before every journey.',
     homeImage: '/images/service-ser-3.png',
     pageImage: '/images/tech-fleet-vip.jpg',
     bg: 'bg-brand-navy',
@@ -73,7 +80,13 @@ const showcases = [
   },
 ];
 
-export default function FleetExperience({ variant = 'home' }: { variant?: 'home' | 'technology' }) {
+export default function FleetExperience({
+  variant = 'home',
+  showLearnMore = false,
+}: {
+  variant?: 'home' | 'technology';
+  showLearnMore?: boolean;
+}) {
   const reduced = useReducedMotion();
   const imageKey = variant === 'technology' ? 'pageImage' : 'homeImage';
 
@@ -222,6 +235,16 @@ export default function FleetExperience({ variant = 'home' }: { variant?: 'home'
                 {showcase.description}
               </p>
 
+              {showLearnMore && (
+                <p
+                  className={`mt-4 max-w-lg text-base leading-relaxed ${
+                    showcase.dark ? 'text-white/55' : 'text-brand-muted'
+                  }`}
+                >
+                  {showcase.details}
+                </p>
+              )}
+
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {showcase.stats.map((stat) => (
                   <div
@@ -246,6 +269,21 @@ export default function FleetExperience({ variant = 'home' }: { variant?: 'home'
                   </div>
                 ))}
               </div>
+
+              {showLearnMore && (
+                <Link
+                  href="/contact"
+                  className={`group mt-8 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+                    showcase.dark
+                      ? 'border border-white/30 bg-white/10 text-white hover:border-brand-gold/50 hover:bg-white/15'
+                      : 'bg-brand-blue text-white shadow-[0_8px_24px_rgba(37,99,235,0.28)] hover:-translate-y-0.5'
+                  }`}
+                  aria-label={`Learn more about ${showcase.title}`}
+                >
+                  Learn More
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </Link>
+              )}
             </div>
           </div>
         </motion.div>

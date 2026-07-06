@@ -25,12 +25,30 @@ const navItems = [
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, loading, signOut } = useAdminAuth();
+  const { user, loading, configError, signOut } = useAdminAuth();
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#eef1f5] text-sm text-brand-muted">
         Loading…
+      </div>
+    );
+  }
+
+  if (configError && !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#eef1f5] px-4">
+        <div className="max-w-md rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
+          <p className="font-display text-lg font-semibold text-brand-navy">Admin unavailable</p>
+          <p className="mt-3 text-sm text-brand-muted">{configError}</p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="mt-6 rounded-xl bg-brand-blue px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            Reload page
+          </button>
+        </div>
       </div>
     );
   }

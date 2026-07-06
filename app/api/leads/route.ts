@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { addLead, readLeads, updateLeadStatus } from '@/lib/admin/dataStore';
 import type { CreateLeadInput, LeadStatus } from '@/lib/admin/types';
 import { unauthorizedResponse, verifyAdminToken } from '@/lib/firebase/verifyAdmin';
+import { isValidUkPhone } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,10 @@ export async function POST(request: Request) {
       body.hubs.length === 0
     ) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (!isValidUkPhone(body.phone)) {
+      return NextResponse.json({ error: 'A valid UK phone number is required.' }, { status: 400 });
     }
 
     const lead = await addLead({

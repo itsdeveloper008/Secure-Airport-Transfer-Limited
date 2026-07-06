@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import Button from '@/components/ui/Button';
 
 const services = [
   {
@@ -11,6 +10,8 @@ const services = [
     title: 'Corporate Fleet Accounts',
     description:
       'Manage executive travel across multiple UK cities through a centralized account structure designed for procurement teams, travel managers, and enterprise organizations. Benefit from consolidated invoicing, dedicated account management, service-level reporting, and complete operational visibility.',
+    details:
+      'Corporate accounts include structured onboarding, cost-centre billing, traveller profiles, and monthly SLA reports. A single account manager coordinates service across every UK airport hub so procurement teams never manage multiple local suppliers.',
     benefits: [
       'Centralized UK-Wide Management',
       'Consolidated Monthly Billing',
@@ -30,6 +31,8 @@ const services = [
     title: 'Airline & Crew Logistics',
     description:
       'Time-critical ground transport for flight crews, cabin staff, and airline operators, synchronized to live flight schedules with zero margin for error. Our operations team coordinates multi-vehicle movements, delay adjustments, and manifest management across every major UK aviation hub.',
+    details:
+      'Dedicated airline desks coordinate manifest pickups, standby vehicles for schedule changes, and encrypted communication with airline operations teams across LHR, MAN, BHX, and regional UK airports.',
     benefits: [
       'Flight-Schedule Synced Pickups',
       'Multi-Vehicle Crew Coordination',
@@ -49,6 +52,8 @@ const services = [
     title: 'Executive Airport Concierge',
     description:
       'Premium meet-and-greet arrivals, real-time flight tracking, and VIP chauffeur services for senior executives and international delegations. Discreet, first-class ground transport from touchdown to final destination, coordinated by dedicated concierge operations staff.',
+    details:
+      'Concierge teams manage terminal meet-and-greet, luggage assistance, hotel connections, and discreet chauffeur operations for board-level visitors and VIP itineraries nationwide.',
     benefits: [
       'Chauffeur Meet & Greet',
       'Real-Time Flight Monitoring',
@@ -132,6 +137,9 @@ export default function CorporateServices() {
               <p className="max-w-xl text-base leading-relaxed text-brand-muted md:text-lg">
                 {s.description}
               </p>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-brand-muted">
+                {s.details}
+              </p>
 
               <ul className="mt-5 space-y-2.5">
                 {s.benefits.map((b) => (
@@ -155,13 +163,11 @@ export default function CorporateServices() {
                 ))}
               </div>
 
-              <Link
-                href="/b2b-services"
-                className="group mt-5 inline-flex items-center gap-2 font-accent text-sm font-semibold text-brand-blue transition-colors hover:text-brand-navy"
-              >
-                {s.cta}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
+              <div className="mt-8">
+                <Button href="/b2b-services" variant="blue" showArrow aria-label={s.cta}>
+                  Learn More
+                </Button>
+              </div>
             </div>
           </div>
         </motion.div>

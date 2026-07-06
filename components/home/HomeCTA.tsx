@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Users,
 } from 'lucide-react';
+import AnimatedCounter from '@/components/ui/AnimatedCounter';
 
 const stats = [
   {
@@ -109,7 +110,7 @@ export default function HomeCTA() {
                     <Icon className="h-5 w-5 text-brand-blue" aria-hidden="true" strokeWidth={1.75} />
                   </div>
                   <p className="mt-4 font-display text-3xl font-bold text-brand-navy lg:text-4xl">
-                    {item.value}
+                    <AnimatedCounter value={item.value} />
                   </p>
                   <p className="mt-2 font-accent text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-navy">
                     {item.label}

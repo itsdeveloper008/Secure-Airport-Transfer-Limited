@@ -23,6 +23,7 @@ import {
   HUB_OPTIONS,
   SPEND_OPTIONS,
 } from '@/lib/contactContent';
+import { isValidUkPhone, UK_PHONE_HINT } from '@/lib/validation';
 
 type FormData = {
   fullName: string;
@@ -217,6 +218,7 @@ export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const [hubs, setHubs] = useState<string[]>([]);
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
@@ -238,12 +240,32 @@ export default function ContactForm() {
 
   const validateStep = () => {
     if (step === 0) return formData.fullName && formData.jobTitle && formData.companyName;
-    if (step === 1) return formData.email && formData.phone && formData.spend && formData.enquiry;
+    if (step === 1) {
+      const phoneValid = formData.phone ? isValidUkPhone(formData.phone) : false;
+      return formData.email && phoneValid && formData.spend && formData.enquiry;
+    }
     if (step === 2) return hubs.length > 0;
     return true;
   };
 
+  const validateAll = () =>
+    Boolean(
+      formData.fullName &&
+        formData.jobTitle &&
+        formData.companyName &&
+        formData.email &&
+        isValidUkPhone(formData.phone) &&
+        formData.spend &&
+        formData.enquiry &&
+        hubs.length > 0,
+    );
+
   const goNext = () => {
+    if (step === 1 && formData.phone && !isValidUkPhone(formData.phone)) {
+      setPhoneError(UK_PHONE_HINT);
+      return;
+    }
+    setPhoneError(null);
     if (!validateStep()) return;
     setStep((s) => s + 1);
     setTimeout(trackCenter, 200);
@@ -251,10 +273,17 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!validateStep()) return;
+    if (!validateAll()) {
+      if (formData.phone && !isValidUkPhone(formData.phone)) {
+        setPhoneError(UK_PHONE_HINT);
+      }
+      setSubmitError('Please complete all required fields before submitting.');
+      return;
+    }
 
     setSubmitting(true);
     setSubmitError(null);
+    setPhoneError(null);
 
     try {
       const res = await fetch('/api/leads', {
@@ -263,10 +292,20 @@ export default function ContactForm() {
         body: JSON.stringify({ ...formData, hubs, details: formData.details }),
       });
 
-      if (!res.ok) throw new Error('Submit failed');
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+
+      if (!res.ok) {
+        throw new Error(data?.error ?? 'Submit failed');
+      }
+
       setSubmitted(true);
-    } catch {
-      setSubmitError('Could not submit your enquiry. Please try again or email us directly.');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Submit failed';
+      setSubmitError(
+        message === 'Submit failed'
+          ? 'Could not submit your enquiry. Please try again or email us directly.'
+          : message,
+      );
     } finally {
       setSubmitting(false);
     }
@@ -441,18 +480,24 @@ export default function ContactForm() {
                         <input
                           id="phone"
                           type="tel"
+                          inputMode="tel"
                           required
                           autoComplete="tel"
+                          maxLength={18}
                           value={formData.phone}
                           placeholder={FORM_FIELDS.phone.placeholder}
                           className={inputClass}
                           {...inputHandlers('phone')}
                           onChange={(e) => {
-                            set('phone')(e.target.value);
+                            const value = e.target.value.replace(/[^\d+\s()-]/g, '');
+                            set('phone')(value);
+                            setPhoneError(value && !isValidUkPhone(value) ? UK_PHONE_HINT : null);
                             bindTrack(e.target, 'phone', trackField);
                           }}
                         />
                       </SpotlightField>
+                      <p className="mt-2 text-xs text-white/30">{FORM_FIELDS.phone.hint}</p>
+                      {phoneError && <p className="mt-1 text-xs text-red-400">{phoneError}</p>}
                     </div>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -587,7 +632,7 @@ export default function ContactForm() {
             ) : (
               <button
                 type="submit"
-                disabled={!validateStep() || submitting}
+                disabled={!validateAll() || submitting}
                 className="min-w-[160px] rounded-full border border-white/30 bg-transparent px-10 py-3.5 text-sm font-bold uppercase tracking-[0.2em] text-white transition-all hover:border-white/60 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-30"
               >
                 {submitting ? 'Sending…' : 'Send Enquiry'}

@@ -1,8 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import {
   MapPin, Bell, Server, Plane, BarChart3, Leaf, Navigation,
-  Activity, ChevronRight,
+  Activity, ChevronRight, ArrowRight,
 } from 'lucide-react';
 
 const sidebarModules = [
@@ -23,15 +24,39 @@ const liveRoutes = [
 ];
 
 const platformFeatures = [
-  { title: 'Live Fleet Tracking', desc: 'GPS monitoring across 247 active vehicles' },
-  { title: 'Flight Monitoring', desc: 'Real-time integration with 11 airport hubs' },
-  { title: 'Automated Notifications', desc: 'Passenger SMS and email confirmations' },
-  { title: 'Carbon Reporting', desc: 'ESG-ready environmental impact data' },
-  { title: 'Dispatch Management', desc: 'Centralised multi-city routing platform' },
-  { title: 'Route Optimisation', desc: 'Intelligent scheduling and delay adjustment' },
+  {
+    title: 'Live Fleet Tracking',
+    desc: 'GPS monitoring across 247 active vehicles',
+    details: 'Operations teams monitor live vehicle positions, ETAs, and journey status across the UK network.',
+  },
+  {
+    title: 'Flight Monitoring',
+    desc: 'Real-time integration with 11 airport hubs',
+    details: 'Flight data from major hubs feeds dispatch automatically, adjusting pickups for delays and early arrivals.',
+  },
+  {
+    title: 'Automated Notifications',
+    desc: 'Passenger SMS and email confirmations',
+    details: 'Travellers receive booking confirmations, driver details, and live updates throughout the journey.',
+  },
+  {
+    title: 'Carbon Reporting',
+    desc: 'ESG-ready environmental impact data',
+    details: 'Per-journey carbon estimates support corporate sustainability reporting and ESG procurement requirements.',
+  },
+  {
+    title: 'Dispatch Management',
+    desc: 'Centralised multi-city routing platform',
+    details: 'A single operations centre coordinates bookings, vehicle allocation, and routing across all UK hubs.',
+  },
+  {
+    title: 'Route Optimisation',
+    desc: 'Intelligent scheduling and delay adjustment',
+    details: 'Dynamic scheduling responds to traffic, flight changes, and operational priorities in real time.',
+  },
 ];
 
-export default function TechnologyPlatform() {
+export default function TechnologyPlatform({ showLearnMore = false }: { showLearnMore?: boolean }) {
   return (
     <section className="section-block section-divider w-full bg-brand-navy">
       <div className="zone w-full">
@@ -129,18 +154,44 @@ export default function TechnologyPlatform() {
               {/* Feature grid */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {platformFeatures.map((f) => (
-                  <div key={f.title} className="rounded-xl border border-white/5 bg-white/[0.03] p-4">
+                  <div key={f.title} className="flex flex-col rounded-xl border border-white/5 bg-white/[0.03] p-4">
                     <div className="flex items-center gap-2">
                       <Navigation className="h-3.5 w-3.5 text-brand-gold" aria-hidden="true" />
                       <h4 className="text-sm font-semibold text-white">{f.title}</h4>
                     </div>
                     <p className="mt-1.5 text-xs leading-relaxed text-white/45">{f.desc}</p>
+                    {showLearnMore && (
+                      <>
+                        <p className="mt-2 flex-1 text-xs leading-relaxed text-white/35">{f.details}</p>
+                        <Link
+                          href="/contact"
+                          className="group mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-gold transition-colors hover:text-white"
+                          aria-label={`Learn more about ${f.title}`}
+                        >
+                          Learn More
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                        </Link>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
         </div>
+
+        {showLearnMore && (
+          <div className="mt-10 text-center">
+            <Link
+              href="/contact"
+              className="btn-gold gap-2"
+              aria-label="Learn more about our technology platform"
+            >
+              <span>Discuss Platform Capabilities</span>
+              <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

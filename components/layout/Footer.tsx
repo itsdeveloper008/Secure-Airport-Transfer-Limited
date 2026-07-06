@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { REGISTERED_OFFICE, REGISTERED_OFFICE_FULL } from '@/lib/constants';
 
 const LOGO_SRC = '/images/satl-logo.png';
 
@@ -28,42 +29,12 @@ const columns = [
     ],
   },
   {
-    title: 'Resources',
-    links: [
-      { href: '/', label: 'Airport Hubs' },
-      { href: '/contact', label: '24/7 Operations' },
-      { href: '/contact', label: 'Account Setup' },
-      { href: '/b2b-services', label: 'Partner Network' },
-      { href: '/contact', label: 'Support' },
-      { href: '/contact', label: 'Help Centre' },
-    ],
-  },
-  {
-    title: 'Coverage',
-    links: [
-      { href: '/', label: 'London Hubs' },
-      { href: '/', label: 'Manchester' },
-      { href: '/', label: 'Birmingham' },
-      { href: '/', label: 'Scotland' },
-      { href: '/', label: 'Nationwide' },
-      { href: '/', label: 'All Airports' },
-    ],
-  },
-  {
-    title: 'Social',
-    links: [
-      { href: '#', label: 'LinkedIn' },
-      { href: 'mailto:operations@secureairporttransfer.co.uk', label: 'Email' },
-      { href: '/contact', label: 'Contact' },
-    ],
-  },
-  {
     title: 'Legal',
     links: [
-      { href: '#', label: 'Privacy Policy' },
-      { href: '#', label: 'Terms of Service' },
-      { href: '#', label: 'Company Registration' },
-      { href: '#', label: 'Insurance & Compliance' },
+      { href: '/privacy-policy', label: 'Privacy Policy' },
+      { href: '/terms-of-service', label: 'Terms of Service' },
+      { href: '/terms-of-service#company-registration', label: 'Company Registration' },
+      { href: '/terms-of-service#insurance-compliance', label: 'Insurance & Compliance' },
       { href: '/contact', label: 'Contact' },
     ],
   },
@@ -110,7 +81,7 @@ export default function Footer() {
 
       {/* Link grid */}
       <div className="zone py-14 lg:py-16">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-6">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-3 lg:gap-x-6">
           {columns.map((col) => (
             <div key={col.title}>
               <h3 className="font-accent text-xs font-semibold uppercase tracking-[0.16em] text-brand-muted">
@@ -131,6 +102,16 @@ export default function Footer() {
             </div>
           ))}
         </div>
+
+        <address className="mt-12 not-italic text-sm leading-relaxed text-brand-muted">
+          <span className="font-semibold text-brand-navy">Registered Office:</span>
+          <br />
+          {REGISTERED_OFFICE.line1}
+          <br />
+          {REGISTERED_OFFICE.line2}
+          <br />
+          {REGISTERED_OFFICE.line3}
+        </address>
       </div>
 
       {/* Bottom bar */}
@@ -166,6 +147,7 @@ export default function Footer() {
 
           <p className="text-center text-sm text-brand-muted sm:text-right">
             © {new Date().getFullYear()} Secure Airport Transfer Limited. All rights reserved.
+            <span className="mt-1 block text-xs">{REGISTERED_OFFICE_FULL}</span>
           </p>
         </div>
       </div>
