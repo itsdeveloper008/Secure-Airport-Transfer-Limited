@@ -1,12 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, FormEvent, type RefObject, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, FormEvent, type RefObject, type ReactNode } from 'react';
 import { motion, AnimatePresence, useReducedMotion, useMotionValueEvent, useSpring } from 'framer-motion';
 import {
   clampPointToElement,
   getAimAngleDeg,
   getCaretPositionInContainer,
-  getElementBoundsInContainer,
   getElementCenterInContainer,
   getEmitterPositionInContainer,
   getPivotPositionInContainer,
@@ -63,7 +62,16 @@ function SpotlightField({
 
 type BeamBounds = { left: number; right: number; bottom: number };
 
-const SPOTLIGHT_SPRING = { stiffness: 200, damping: 28 };
+const SPOTLIGHT_SPRING = { stiffness: 280, damping: 30 };
+const BEAM_HALF_WIDTH = 22;
+
+function beamBoundsAtCaret(caret: Point): BeamBounds {
+  return {
+    left: caret.x - BEAM_HALF_WIDTH,
+    right: caret.x + BEAM_HALF_WIDTH,
+    bottom: caret.y + 10,
+  };
+}
 
 function useSpotlight(
   containerRef: RefObject<HTMLDivElement | null>,
@@ -83,26 +91,29 @@ function useSpotlight(
   const beamBottomSpring = useSpring(0, SPOTLIGHT_SPRING);
 
   const syncSpringsToState = useCallback(() => {
-    setCylinderAngle(-angleSpring.get());
+    const angle = angleSpring.get();
+    setCylinderAngle(-angle);
     setBeamBounds({
       left: beamLeftSpring.get(),
       right: beamRightSpring.get(),
       bottom: beamBottomSpring.get(),
     });
-  }, [angleSpring, beamLeftSpring, beamRightSpring, beamBottomSpring]);
+
+    const c = containerRef.current;
+    const fixture = emitterRef.current;
+    if (c && fixture) {
+      setEmitter(getEmitterPositionInContainer(fixture, c, angle));
+    }
+  }, [angleSpring, beamLeftSpring, beamRightSpring, beamBottomSpring, containerRef, emitterRef]);
 
   useMotionValueEvent(angleSpring, 'change', syncSpringsToState);
   useMotionValueEvent(beamLeftSpring, 'change', syncSpringsToState);
   useMotionValueEvent(beamRightSpring, 'change', syncSpringsToState);
   useMotionValueEvent(beamBottomSpring, 'change', syncSpringsToState);
 
-  // Anchor beam apex to the real lens after cylinder rotates — no gap
-  useLayoutEffect(() => {
-    const c = containerRef.current;
-    const fixture = emitterRef.current;
-    if (!c || !fixture) return;
-    setEmitter(getEmitterPositionInContainer(fixture, c));
-  }, [cylinderAngle, beamBounds, containerRef, emitterRef]);
+  useEffect(() => {
+    syncSpringsToState();
+  }, [syncSpringsToState]);
 
   const applyAim = useCallback(
     (nextTarget: Point, bounds: BeamBounds) => {
@@ -121,16 +132,6 @@ function useSpotlight(
     [containerRef, emitterRef, angleSpring, beamLeftSpring, beamRightSpring, beamBottomSpring],
   );
 
-  const boundsFromElement = useCallback(
-    (el: HTMLElement) => {
-      const c = containerRef.current;
-      if (!c) return { left: 0, right: 0, bottom: 0 };
-      const b = getElementBoundsInContainer(el, c);
-      return { left: b.left, right: b.right, bottom: b.bottom };
-    },
-    [containerRef],
-  );
-
   const trackCenter = useCallback(() => {
     if (reduced) return;
     const c = containerRef.current;
@@ -138,10 +139,9 @@ function useSpotlight(
     if (!c || !steps) return;
 
     const center = getElementCenterInContainer(steps, c);
-    const bounds = boundsFromElement(steps);
     setActive(true);
-    applyAim(center, bounds);
-  }, [containerRef, stepsRef, reduced, applyAim, boundsFromElement]);
+    applyAim(center, beamBoundsAtCaret(center));
+  }, [containerRef, stepsRef, reduced, applyAim]);
 
   const trackField = useCallback(
     (fieldId: string, element?: HTMLElement | null) => {
@@ -150,19 +150,21 @@ function useSpotlight(
       const el = element ?? fieldRefs.current[fieldId];
       if (!c || !el) return;
 
-      const bounds = boundsFromElement(el);
-
       if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-        const raw = getCaretPositionInContainer(el, c);
-        const clamped = clampPointToElement(raw, el, c);
+        const caretPos = el.selectionStart ?? el.value.length;
+        const charIndex =
+          el.value.length > 0 ? Math.max(0, Math.min(caretPos - 1, el.value.length - 1)) : 0;
+        const raw = getCaretPositionInContainer(el, c, charIndex);
+        const target = clampPointToElement(raw, el, c, 8);
         setActive(true);
-        applyAim(clamped, bounds);
+        applyAim(target, beamBoundsAtCaret(target));
       } else {
+        const center = getElementCenterInContainer(el, c);
         setActive(true);
-        applyAim(getElementCenterInContainer(el, c), bounds);
+        applyAim(center, beamBoundsAtCaret(center));
       }
     },
-    [containerRef, reduced, applyAim, boundsFromElement],
+    [containerRef, reduced, applyAim],
   );
 
   useEffect(() => {
@@ -196,7 +198,9 @@ function useSpotlight(
 type TrackableInput = HTMLInputElement | HTMLTextAreaElement;
 
 function bindTrack(el: TrackableInput, fieldId: string, trackField: (id: string, el: TrackableInput) => void) {
-  requestAnimationFrame(() => trackField(fieldId, el));
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => trackField(fieldId, el));
+  });
 }
 
 export default function ContactForm() {
@@ -314,12 +318,12 @@ export default function ContactForm() {
 
   const inputHandlers = (fieldId: string) => ({
     ref: setFieldRef(fieldId),
-    onFocus: (e: React.FocusEvent<TrackableInput>) => trackField(fieldId, e.currentTarget),
-    onClick: (e: React.MouseEvent<TrackableInput>) => trackField(fieldId, e.currentTarget),
-    onKeyUp: (e: React.KeyboardEvent<TrackableInput>) => trackField(fieldId, e.currentTarget),
-    onKeyDown: (e: React.KeyboardEvent<TrackableInput>) => trackField(fieldId, e.currentTarget),
-    onSelect: (e: React.SyntheticEvent<TrackableInput>) => trackField(fieldId, e.currentTarget),
-    onInput: (e: React.FormEvent<TrackableInput>) => trackField(fieldId, e.currentTarget),
+    onFocus: (e: React.FocusEvent<TrackableInput>) => bindTrack(e.currentTarget, fieldId, trackField),
+    onClick: (e: React.MouseEvent<TrackableInput>) => bindTrack(e.currentTarget, fieldId, trackField),
+    onKeyUp: (e: React.KeyboardEvent<TrackableInput>) => bindTrack(e.currentTarget, fieldId, trackField),
+    onKeyDown: (e: React.KeyboardEvent<TrackableInput>) => bindTrack(e.currentTarget, fieldId, trackField),
+    onSelect: (e: React.SyntheticEvent<TrackableInput>) => bindTrack(e.currentTarget, fieldId, trackField),
+    onInput: (e: React.FormEvent<TrackableInput>) => bindTrack(e.currentTarget, fieldId, trackField),
   });
 
   if (submitted) {
@@ -362,7 +366,9 @@ export default function ContactForm() {
       )}
 
       <div className="relative z-10 w-full">
-        <SpotlightFixture ref={emitterRef} rotation={cylinderAngle} />
+        <div className="relative mx-auto mb-10 h-[140px] w-[180px]">
+          <SpotlightFixture ref={emitterRef} rotation={cylinderAngle} />
+        </div>
 
         <h2 className="text-center font-display text-4xl font-bold uppercase tracking-[0.12em] text-white sm:text-5xl md:text-6xl">
           {FORM_HEADING}

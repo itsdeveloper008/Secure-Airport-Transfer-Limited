@@ -15,13 +15,13 @@ interface SpotlightFixtureProps {
   rotation: number;
 }
 
-/** Matte black track-light fixture — cylinder pivots with the beam */
+/** Matte black track-light fixture — mount stays centered, head pivots with the beam */
 export const SpotlightFixture = forwardRef<HTMLDivElement, SpotlightFixtureProps>(
   function SpotlightFixture({ rotation }, ref) {
     return (
       <div
         ref={ref}
-        className="relative mx-auto mb-10 h-[140px] w-[180px]"
+        className="relative h-[140px] w-[180px]"
         aria-hidden="true"
       >
         <svg
@@ -32,23 +32,24 @@ export const SpotlightFixture = forwardRef<HTMLDivElement, SpotlightFixtureProps
         >
           <defs>
             <linearGradient id="cylinderBody" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#080808" />
-              <stop offset="30%" stopColor="#1a1a1a" />
-              <stop offset="55%" stopColor="#2d2d2d" />
-              <stop offset="100%" stopColor="#101010" />
+              <stop offset="0%" stopColor="#0a0a0a" />
+              <stop offset="35%" stopColor="#222" />
+              <stop offset="65%" stopColor="#2a2a2a" />
+              <stop offset="100%" stopColor="#111" />
             </linearGradient>
-            <radialGradient id="lensFace" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fffef8" />
-              <stop offset="40%" stopColor="#ffe9a8" />
-              <stop offset="80%" stopColor="#c9a227" />
-              <stop offset="100%" stopColor="#6b5418" />
+            <radialGradient id="frostedPanel" cx="50%" cy="42%" r="58%">
+              <stop offset="0%" stopColor="#fffef9" />
+              <stop offset="30%" stopColor="#faf8f2" />
+              <stop offset="65%" stopColor="#eceae4" />
+              <stop offset="100%" stopColor="#b8b6b0" />
             </radialGradient>
-            <filter id="lensBloom" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
+            <radialGradient id="panelGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(255,254,248,0.98)" />
+              <stop offset="45%" stopColor="rgba(255,248,228,0.55)" />
+              <stop offset="100%" stopColor="rgba(255,245,220,0)" />
+            </radialGradient>
+            <filter id="panelSoft" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="0.8" />
             </filter>
           </defs>
 
@@ -64,25 +65,55 @@ export const SpotlightFixture = forwardRef<HTMLDivElement, SpotlightFixtureProps
           {/* Pivot marker */}
           <circle className="spotlight-pivot" cx="90" cy="30" r="1.5" fill="transparent" />
 
-          {/* Cylinder assembly — rotates with beam via native SVG transform */}
+          {/* Cylinder assembly — head pivots, recessed frosted lens like reference */}
           <g transform={`rotate(${rotation}, 90, 30)`}>
-            <rect x="78" y="30" width="24" height="78" rx="12" fill="url(#cylinderBody)" />
-            <rect x="80" y="33" width="3" height="72" rx="1.5" fill="rgba(255,255,255,0.05)" />
-            <rect x="97" y="33" width="3" height="72" rx="1.5" fill="rgba(0,0,0,0.35)" />
-            <rect x="78" y="94" width="24" height="14" rx="12" fill="#0a0a0a" />
+            <rect x="78" y="30" width="24" height="66" rx="12" fill="url(#cylinderBody)" />
+            <rect x="80" y="33" width="2.5" height="60" rx="1.25" fill="rgba(255,255,255,0.05)" />
+            <rect x="97.5" y="33" width="2.5" height="60" rx="1.25" fill="rgba(0,0,0,0.35)" />
 
-            <circle
+            {/* Housing face — matte black outer ring */}
+            <ellipse cx="90" cy="96" rx="13.5" ry="6" fill="#0a0a0a" />
+            <ellipse cx="90" cy="96" rx="13" ry="5.6" fill="none" stroke="#151515" strokeWidth="1" />
+
+            {/* Recessed cavity shadow */}
+            <ellipse cx="90" cy="96.8" rx="11.8" ry="5" fill="#040404" />
+            <ellipse cx="90" cy="97" rx="11" ry="4.5" fill="#080808" />
+
+            {/* Bright white inner bezel */}
+            <ellipse
+              cx="90"
+              cy="96.5"
+              rx="10.2"
+              ry="4"
+              fill="none"
+              stroke="#f2f2f2"
+              strokeWidth="1.1"
+            />
+
+            {/* Frosted diffused panel — recessed LED face */}
+            <ellipse
               className="spotlight-lens"
               cx="90"
-              cy="106"
-              r="13"
-              fill="url(#lensFace)"
-              stroke="#2a2a2a"
-              strokeWidth="2"
-              filter="url(#lensBloom)"
+              cy="97"
+              rx="9"
+              ry="3.2"
+              fill="url(#frostedPanel)"
+              filter="url(#panelSoft)"
             />
-            <circle cx="90" cy="106" r="7" fill="rgba(255,254,248,0.9)" />
-            <circle cx="90" cy="106" r="22" fill="rgba(255,220,150,0.14)" />
+
+            {/* Warm centre glow on panel */}
+            <ellipse cx="90" cy="96.8" rx="6" ry="2.1" fill="url(#panelGlow)" />
+
+            {/* Subtle top-edge highlight on housing */}
+            <ellipse
+              cx="90"
+              cy="95.5"
+              rx="12"
+              ry="4.8"
+              fill="none"
+              stroke="rgba(255,255,255,0.07)"
+              strokeWidth="0.6"
+            />
           </g>
         </svg>
       </div>
@@ -101,30 +132,66 @@ export default function SpotlightScene({
   beamBottom,
   active,
 }: SpotlightSceneProps) {
-  const points = `${emitterX},${emitterY} ${beamLeft},${beamBottom} ${beamRight},${beamBottom}`;
+  const hotspotX = (beamLeft + beamRight) / 2;
+  const hotspotY = beamBottom;
+
+  // Pull apex slightly back into the lens so blur doesn't leave a visible gap
+  const bx = hotspotX - emitterX;
+  const by = hotspotY - emitterY;
+  const bLen = Math.hypot(bx, by) || 1;
+  const overlap = 16;
+  const apexX = emitterX - (bx / bLen) * overlap;
+  const apexY = emitterY - (by / bLen) * overlap;
+
+  const points = `${apexX},${apexY} ${beamLeft},${beamBottom} ${beamRight},${beamBottom}`;
 
   return (
     <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
       <svg className="absolute inset-0 h-full w-full overflow-visible">
         <defs>
           <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(255,245,210,0.85)" />
-            <stop offset="8%" stopColor="rgba(255,225,160,0.65)" />
-            <stop offset="30%" stopColor="rgba(210,235,255,0.38)" />
-            <stop offset="65%" stopColor="rgba(150,190,255,0.14)" />
+            <stop offset="0%" stopColor="rgba(255,245,210,0.9)" />
+            <stop offset="10%" stopColor="rgba(255,225,160,0.7)" />
+            <stop offset="35%" stopColor="rgba(210,235,255,0.42)" />
+            <stop offset="70%" stopColor="rgba(150,190,255,0.16)" />
             <stop offset="100%" stopColor="rgba(80,100,255,0)" />
           </linearGradient>
+          <radialGradient id="caretHotspot" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,252,235,0.95)" />
+            <stop offset="45%" stopColor="rgba(255,230,170,0.55)" />
+            <stop offset="100%" stopColor="rgba(150,190,255,0)" />
+          </radialGradient>
           <filter id="beamBlur">
-            <feGaussianBlur stdDeviation="3" />
+            <feGaussianBlur stdDeviation="2.5" />
+          </filter>
+          <filter id="hotspotBlur">
+            <feGaussianBlur stdDeviation="6" />
           </filter>
         </defs>
 
-        {/* No extra spring — points update in lockstep with cylinder spring */}
         <polygon
           fill="url(#beamGrad)"
           filter="url(#beamBlur)"
           points={points}
-          opacity={active ? 0.95 : 0.35}
+          opacity={active ? 0.98 : 0.35}
+        />
+        <ellipse
+          cx={emitterX}
+          cy={emitterY}
+          rx={active ? 10 : 7}
+          ry={active ? 4 : 3}
+          fill="rgba(255,245,225,0.45)"
+          filter="url(#hotspotBlur)"
+          opacity={active ? 0.55 : 0.25}
+        />
+        <ellipse
+          cx={hotspotX}
+          cy={hotspotY}
+          rx={active ? 28 : 18}
+          ry={active ? 14 : 10}
+          fill="url(#caretHotspot)"
+          filter="url(#hotspotBlur)"
+          opacity={active ? 0.9 : 0.4}
         />
       </svg>
     </div>

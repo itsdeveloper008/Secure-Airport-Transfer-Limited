@@ -5,6 +5,7 @@ import {
   MapPin, Bell, Server, Plane, BarChart3, Leaf, Navigation,
   Activity, ChevronRight, ArrowRight,
 } from 'lucide-react';
+import { platformFeatureSlugs } from '@/lib/technologyDetails';
 
 const sidebarModules = [
   { icon: MapPin, label: 'Fleet Tracking', active: true },
@@ -164,7 +165,7 @@ export default function TechnologyPlatform({ showLearnMore = false }: { showLear
                       <>
                         <p className="mt-2 flex-1 text-xs leading-relaxed text-white/35">{f.details}</p>
                         <Link
-                          href="/contact"
+                          href={`/technology-fleet/${platformFeatureSlugs[f.title]}`}
                           className="group mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-gold transition-colors hover:text-white"
                           aria-label={`Learn more about ${f.title}`}
                         >
@@ -183,7 +184,7 @@ export default function TechnologyPlatform({ showLearnMore = false }: { showLear
         {showLearnMore && (
           <div className="mt-10 text-center">
             <Link
-              href="/contact"
+              href="/technology-fleet/centralised-dispatch"
               className="btn-gold gap-2"
               aria-label="Learn more about our technology platform"
             >

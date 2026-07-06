@@ -27,7 +27,7 @@ const sections = [
       'Traveller profiles, approval workflows, and cost-centre billing',
     ],
     image: '/images/b2b-fleet-accounts.jpg',
-    learnMoreHref: '/contact',
+    learnMoreHref: '/b2b-services/corporate-fleet-accounts',
   },
   {
     label: 'AIRLINE OPERATIONS',
@@ -47,7 +47,7 @@ const sections = [
       '24/7 airline operations desk with escalation protocols',
     ],
     image: '/images/b2b-airline-logistics.jpg',
-    learnMoreHref: '/contact',
+    learnMoreHref: '/b2b-services/airline-crew-logistics',
   },
   {
     label: 'VIP SERVICES',
@@ -67,7 +67,7 @@ const sections = [
       'Hotel, conference, and onward connection coordination',
     ],
     image: '/images/b2b-executive-concierge.jpg',
-    learnMoreHref: '/contact',
+    learnMoreHref: '/b2b-services/executive-airport-concierge',
   },
 ];
 
@@ -87,8 +87,8 @@ export default function B2BServicesPage() {
           className={`section-block section-divider w-full ${i % 2 === 0 ? 'bg-brand-white' : 'bg-brand-gray'}`}
         >
           <div className="zone w-full">
-            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-              <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
+            <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
+              <div className={`min-w-0 ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
                 <p className="font-accent text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-gold">
                   {s.label}
                 </p>
@@ -119,7 +119,11 @@ export default function B2BServicesPage() {
                   </Button>
                 </div>
               </div>
-              <div className={`relative min-h-[360px] overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(7,26,53,0.12)] ${i % 2 === 1 ? 'lg:order-1' : ''}`}>
+              <div
+                className={`relative aspect-[4/3] min-h-[280px] w-full shrink-0 overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(7,26,53,0.12)] sm:min-h-[320px] lg:min-h-[400px] ${
+                  i % 2 === 1 ? 'lg:order-1' : ''
+                }`}
+              >
                 <Image src={s.image} alt={s.title} fill className="object-cover" sizes="50vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 to-transparent" />
               </div>

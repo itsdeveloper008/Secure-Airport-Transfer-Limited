@@ -2,6 +2,7 @@ import PageHero from '@/components/layout/PageHero';
 import FleetExperience from '@/components/home/FleetExperience';
 import TechnologyPlatform from '@/components/home/TechnologyPlatform';
 import Button from '@/components/ui/Button';
+import { techFeatureSlugs } from '@/lib/technologyDetails';
 import { Server, MapPin, Bell, Plane, BarChart3, Leaf } from 'lucide-react';
 
 export const metadata = {
@@ -16,7 +17,7 @@ const techFeatures = [
     body: 'Multi-city fleet routing from a single operations centre with real-time UK network coordination.',
     details:
       'Dispatch teams manage bookings, vehicle allocation, and route planning across London, Manchester, Birmingham, Scotland, and regional hubs from one platform. Account managers and operations staff share live visibility into every active journey.',
-    learnMoreHref: '/contact',
+    learnMoreHref: `/technology-fleet/${techFeatureSlugs['Centralised Dispatch Architecture']}`,
   },
   {
     icon: MapPin,
@@ -24,7 +25,7 @@ const techFeatures = [
     body: 'Every vehicle GPS-monitored with live visibility for operations staff and account managers.',
     details:
       'Live vehicle positions, ETA updates, and journey status feed directly into the operations dashboard. Corporate clients receive proactive notifications when schedules change or vehicles are dispatched.',
-    learnMoreHref: '/contact',
+    learnMoreHref: `/technology-fleet/${techFeatureSlugs['Real-Time GPS Fleet Tracking']}`,
   },
   {
     icon: Bell,
@@ -32,7 +33,7 @@ const techFeatures = [
     body: 'SMS and email confirmations, driver details, and live ETA updates.',
     details:
       'Passengers receive booking confirmations, chauffeur contact details, and real-time arrival updates. Automated messaging reduces no-shows and keeps travellers informed throughout the journey.',
-    learnMoreHref: '/contact',
+    learnMoreHref: `/technology-fleet/${techFeatureSlugs['Automated Passenger Notifications']}`,
   },
   {
     icon: Plane,
@@ -40,7 +41,7 @@ const techFeatures = [
     body: 'Flight data feeds directly into dispatch, adjusting schedules for delays or early arrivals.',
     details:
       'Live flight data from major UK airports automatically adjusts pickup times for airline crew, executive arrivals, and VIP concierge services. Dispatch reacts to delays without manual rebooking.',
-    learnMoreHref: '/contact',
+    learnMoreHref: `/technology-fleet/${techFeatureSlugs['Flight Tracking Integration']}`,
   },
   {
     icon: BarChart3,
@@ -48,7 +49,7 @@ const techFeatures = [
     body: 'Monthly dashboards covering on-time rates, service levels, and journey analytics.',
     details:
       'Corporate accounts receive monthly performance reports covering on-time performance, journey volumes, hub activity, and service-level metrics. Procurement teams get audit-ready data for contract reviews.',
-    learnMoreHref: '/contact',
+    learnMoreHref: `/technology-fleet/${techFeatureSlugs['SLA Performance Reporting']}`,
   },
   {
     icon: Leaf,
@@ -56,7 +57,7 @@ const techFeatures = [
     body: 'Carbon impact reports per billing cycle for ESG-conscious procurement teams.',
     details:
       'Environmental impact data is compiled per billing cycle, supporting ESG reporting and corporate sustainability programmes. Journey-level carbon estimates help travel managers track ground transport emissions.',
-    learnMoreHref: '/contact',
+    learnMoreHref: `/technology-fleet/${techFeatureSlugs['Carbon Footprint Reporting']}`,
   },
 ];
 

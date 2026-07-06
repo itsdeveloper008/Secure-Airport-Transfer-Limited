@@ -131,17 +131,20 @@ export function getPivotPositionInContainer(
   };
 }
 
-/** Lens position from pivot + aim angle (degrees, 0 = straight down) */
-const LENS_OFFSET_PX = 76;
+/** Lens centre offset from pivot in fixture pixels (matches SVG pivot → lens centre) */
+const LENS_CENTER_OFFSET_PX = 67;
+/** Extra offset to the front face of the opening */
+const LENS_EXIT_OFFSET_PX = 3.5;
 
 export function getLensPositionFromPivot(
   pivot: { x: number; y: number },
   aimAngleDeg: number,
 ): { x: number; y: number } {
   const rad = (aimAngleDeg * Math.PI) / 180;
+  const total = LENS_CENTER_OFFSET_PX + LENS_EXIT_OFFSET_PX;
   return {
-    x: pivot.x + Math.sin(rad) * LENS_OFFSET_PX,
-    y: pivot.y + Math.cos(rad) * LENS_OFFSET_PX,
+    x: pivot.x + Math.sin(rad) * total,
+    y: pivot.y + Math.cos(rad) * total,
   };
 }
 
@@ -165,17 +168,12 @@ export function getElementCenterInContainer(
   };
 }
 
-/** Emitter position — from the spotlight lens opening */
+/** Emitter position — pivot + aim angle, stays locked to the lens opening */
 export function getEmitterPositionInContainer(
   emitterEl: HTMLElement,
   container: HTMLElement,
+  aimAngleDeg = 0,
 ): { x: number; y: number } {
-  const lens =
-    (emitterEl.querySelector('.spotlight-lens') as HTMLElement | null) ?? emitterEl;
-  const eRect = lens.getBoundingClientRect();
-  const cRect = container.getBoundingClientRect();
-  return {
-    x: eRect.left + eRect.width / 2 - cRect.left,
-    y: eRect.bottom - cRect.top + 2,
-  };
+  const pivot = getPivotPositionInContainer(emitterEl, container);
+  return getLensPositionFromPivot(pivot, aimAngleDeg);
 }

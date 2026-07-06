@@ -17,7 +17,7 @@ interface AnimatedCounterProps {
 
 export default function AnimatedCounter({ value, className }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const isInView = useInView(ref, { once: true, amount: 0.45, margin: '0px 0px -60px 0px' });
   const reduced = useReducedMotion();
   const [display, setDisplay] = useState(reduced ? value : value === '24/7' ? '0/7' : `0${parseValue(value).suffix}`);
 

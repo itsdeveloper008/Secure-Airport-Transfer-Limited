@@ -3,11 +3,13 @@
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import Button from '@/components/ui/Button';
+import AnimatedCounter from '@/components/ui/AnimatedCounter';
 
 const services = [
   {
     label: 'CORPORATE SOLUTIONS',
     title: 'Corporate Fleet Accounts',
+    slug: 'corporate-fleet-accounts',
     description:
       'Manage executive travel across multiple UK cities through a centralized account structure designed for procurement teams, travel managers, and enterprise organizations. Benefit from consolidated invoicing, dedicated account management, service-level reporting, and complete operational visibility.',
     details:
@@ -29,6 +31,7 @@ const services = [
   {
     label: 'AIRLINE OPERATIONS',
     title: 'Airline & Crew Logistics',
+    slug: 'airline-crew-logistics',
     description:
       'Time-critical ground transport for flight crews, cabin staff, and airline operators, synchronized to live flight schedules with zero margin for error. Our operations team coordinates multi-vehicle movements, delay adjustments, and manifest management across every major UK aviation hub.',
     details:
@@ -50,6 +53,7 @@ const services = [
   {
     label: 'VIP SERVICES',
     title: 'Executive Airport Concierge',
+    slug: 'executive-airport-concierge',
     description:
       'Premium meet-and-greet arrivals, real-time flight tracking, and VIP chauffeur services for senior executives and international delegations. Discreet, first-class ground transport from touchdown to final destination, coordinated by dedicated concierge operations staff.',
     details:
@@ -100,30 +104,29 @@ export default function CorporateServices() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid w-full items-stretch gap-0 md:grid-cols-2">
-            {/* Image — flush to top, no section padding */}
-            <div
-              className={`relative min-h-[240px] sm:min-h-[300px] md:min-h-[360px] lg:min-h-[min(55vh,520px)] ${
-                i % 2 === 1 ? 'md:order-2' : ''
-              }`}
-            >
-              <div className="group relative h-full min-h-[inherit] w-full overflow-hidden">
-                <Image
-                  src={s.image}
-                  alt={s.title}
-                  fill
-                  className="object-cover object-center transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
-                  sizes="50vw"
-                />
+          <div className="zone w-full">
+            <div className="grid items-start gap-0 md:grid-cols-2 md:gap-10 lg:gap-16">
+              <div
+                className={`relative aspect-[4/3] min-h-[240px] w-full shrink-0 overflow-hidden sm:min-h-[300px] md:min-h-0 ${
+                  i % 2 === 1 ? 'md:order-2' : ''
+                }`}
+              >
+                <div className="group relative h-full w-full overflow-hidden md:rounded-2xl">
+                  <Image
+                    src={s.image}
+                    alt={s.title}
+                    fill
+                    className="object-cover object-center transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Content */}
-            <div
-              className={`flex flex-col justify-center px-[clamp(1.25rem,5vw,5rem)] py-10 sm:py-12 lg:py-14 ${
-                i % 2 === 1 ? 'md:order-1' : ''
-              }`}
-            >
+              <div
+                className={`min-w-0 px-[clamp(1.25rem,5vw,3rem)] py-10 sm:py-12 lg:py-14 ${
+                  i % 2 === 1 ? 'md:order-1' : ''
+                }`}
+              >
               <p className="font-accent text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-gold">
                 {s.label}
               </p>
@@ -154,7 +157,11 @@ export default function CorporateServices() {
                 {s.stats.map((stat) => (
                   <div key={stat.label}>
                     <p className="font-display text-2xl font-bold text-brand-navy lg:text-3xl">
-                      {stat.value}
+                      {/^\d/.test(stat.value) ? (
+                        <AnimatedCounter value={stat.value} />
+                      ) : (
+                        stat.value
+                      )}
                     </p>
                     <p className="mt-1 font-accent text-[10px] font-semibold uppercase tracking-widest text-brand-muted">
                       {stat.label}
@@ -164,9 +171,10 @@ export default function CorporateServices() {
               </div>
 
               <div className="mt-8">
-                <Button href="/b2b-services" variant="blue" showArrow aria-label={s.cta}>
+                <Button href={`/b2b-services/${s.slug}`} variant="blue" showArrow aria-label={s.cta}>
                   Learn More
                 </Button>
+              </div>
               </div>
             </div>
           </div>

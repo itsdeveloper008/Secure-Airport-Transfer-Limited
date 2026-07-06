@@ -81,7 +81,7 @@ export default function Footer() {
 
       {/* Link grid */}
       <div className="zone py-14 lg:py-16">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-3 lg:gap-x-6">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
           {columns.map((col) => (
             <div key={col.title}>
               <h3 className="font-accent text-xs font-semibold uppercase tracking-[0.16em] text-brand-muted">
@@ -101,17 +101,20 @@ export default function Footer() {
               </ul>
             </div>
           ))}
-        </div>
 
-        <address className="mt-12 not-italic text-sm leading-relaxed text-brand-muted">
-          <span className="font-semibold text-brand-navy">Registered Office:</span>
-          <br />
-          {REGISTERED_OFFICE.line1}
-          <br />
-          {REGISTERED_OFFICE.line2}
-          <br />
-          {REGISTERED_OFFICE.line3}
-        </address>
+          <div>
+            <h3 className="font-accent text-xs font-semibold uppercase tracking-[0.16em] text-brand-muted">
+              Registered Office
+            </h3>
+            <address className="mt-4 not-italic text-sm font-semibold leading-relaxed text-brand-navy">
+              {REGISTERED_OFFICE.line1}
+              <br />
+              {REGISTERED_OFFICE.line2}
+              <br />
+              {REGISTERED_OFFICE.line3}
+            </address>
+          </div>
+        </div>
       </div>
 
       {/* Bottom bar */}

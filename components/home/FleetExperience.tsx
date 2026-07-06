@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Users, Wifi, Clock, Plane, Building2, Shield } from 'lucide-react';
+import AnimatedCounter from '@/components/ui/AnimatedCounter';
+import { fleetSlugs } from '@/lib/technologyDetails';
 
 const headerStats = [
   'Executive Fleet',
@@ -25,6 +27,7 @@ const showcases = [
       'Mercedes S-Class and E-Class vehicles are maintained to corporate standards with professional chauffeurs, climate control, Wi-Fi on request, and discreet branding. Ideal for airport transfers, city-to-city executive travel, and board-level appointments.',
     homeImage: '/images/service-ser-1.png',
     pageImage: '/images/tech-fleet-saloon.jpg',
+    learnMoreHref: `/technology-fleet/${fleetSlugs['Executive Saloon Fleet']}`,
     bg: 'bg-brand-white',
     dark: false,
     stats: [
@@ -46,6 +49,7 @@ const showcases = [
       'Executive MPVs accommodate teams of up to seven passengers with luggage capacity for conference groups, hotel shuttles, and airline crew repositioning. Flexible seating and premium interiors support multi-stop itineraries across UK airport networks.',
     homeImage: '/images/service-ser-2.png',
     pageImage: '/images/tech-fleet-mpv.jpg',
+    learnMoreHref: `/technology-fleet/${fleetSlugs['Luxury MPV Fleet']}`,
     bg: 'bg-brand-gray',
     dark: false,
     stats: [
@@ -67,6 +71,7 @@ const showcases = [
       'VIP chauffeur operations include terminal meet-and-greet, private aviation FBO connections, and fully discreet travel for high-profile executives. Chauffeurs are briefed on itinerary, security requirements, and passenger preferences before every journey.',
     homeImage: '/images/service-ser-3.png',
     pageImage: '/images/tech-fleet-vip.jpg',
+    learnMoreHref: `/technology-fleet/${fleetSlugs['VIP Chauffeur Fleet']}`,
     bg: 'bg-brand-navy',
     dark: true,
     stats: [
@@ -124,7 +129,11 @@ export default function FleetExperience({
                 ].map((item) => (
                   <div key={item.label}>
                     <p className="font-display text-2xl font-bold text-brand-navy lg:text-3xl">
-                      {item.value}
+                      {showLearnMore || variant === 'technology' ? (
+                        <AnimatedCounter value={item.value} />
+                      ) : (
+                        item.value
+                      )}
                     </p>
                     <p className="mt-1 font-accent text-[10px] font-semibold uppercase tracking-widest text-brand-muted">
                       {item.label}
@@ -170,120 +179,102 @@ export default function FleetExperience({
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.9 }}
         >
-          {/* Background watermark number */}
-          <span
-            className={`pointer-events-none absolute right-[clamp(1rem,5vw,5rem)] top-1/2 z-0 -translate-y-1/2 select-none font-display text-[clamp(8rem,20vw,16rem)] font-bold leading-none ${
-              showcase.dark ? 'text-white/[0.04]' : 'text-brand-navy/[0.04]'
-            }`}
-            aria-hidden="true"
-          >
-            {showcase.number}
-          </span>
-
-          <div
-            className={`relative z-10 grid w-full items-stretch gap-0 lg:grid-cols-[1.1fr_0.9fr] ${
-              i % 2 === 1 ? '' : ''
-            }`}
-          >
-            {/* Image — 55% with explicit height */}
-            <div
-              className={`relative h-[280px] sm:h-[340px] lg:h-[min(55vh,520px)] ${
-                i % 2 === 1 ? 'lg:order-2' : ''
-              }`}
-            >
-              <div className="group relative h-full w-full overflow-hidden">
-                <Image
-                  src={showcase[imageKey]}
-                  alt={showcase.title}
-                  fill
-                  priority={i === 0}
-                  className="object-cover object-center transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
-                  sizes="55vw"
-                />
+          <div className="zone relative w-full">
+            <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
+              {/* Image */}
+              <div
+                className={`relative aspect-[4/3] min-h-[260px] w-full shrink-0 overflow-hidden rounded-2xl sm:min-h-[320px] lg:min-h-[420px] ${
+                  i % 2 === 1 ? 'lg:order-2' : ''
+                }`}
+              >
+                <div className="group relative h-full w-full overflow-hidden">
+                  <Image
+                    src={showcase[imageKey]}
+                    alt={showcase.title}
+                    fill
+                    priority={i === 0}
+                    className="object-cover object-center transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Content — 45% */}
-            <div
-              className={`flex flex-col justify-center px-[clamp(1.25rem,5vw,5rem)] py-6 lg:py-8 ${
-                i % 2 === 1 ? 'lg:order-1' : ''
-              }`}
-            >
-              <div className="mb-4 h-px w-full max-w-xs bg-brand-gold/40" />
-
-              <p
-                className={`font-accent text-[11px] font-semibold uppercase tracking-[0.28em] ${
-                  showcase.dark ? 'text-brand-gold' : 'text-brand-gold'
-                }`}
+              {/* Content */}
+              <div
+                className={`relative z-10 min-w-0 py-2 lg:py-6 ${i % 2 === 1 ? 'lg:order-1' : ''}`}
               >
-                {showcase.subtitle}
-              </p>
+                <div className="mb-4 h-px w-full max-w-xs bg-brand-gold/40" />
 
-              <h3
-                className={`mt-3 font-display text-[clamp(1.875rem,4vw,3.5rem)] font-bold leading-[1.06] tracking-tight ${
-                  showcase.dark ? 'text-white' : 'text-brand-navy'
-                }`}
-              >
-                {showcase.title}
-              </h3>
+                <p className="font-accent text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-gold">
+                  {showcase.subtitle}
+                </p>
 
-              <p
-                className={`mt-5 max-w-lg text-[clamp(1rem,1.8vw,1.25rem)] leading-relaxed ${
-                  showcase.dark ? 'text-white/70' : 'text-brand-muted'
-                }`}
-              >
-                {showcase.description}
-              </p>
-
-              {showLearnMore && (
-                <p
-                  className={`mt-4 max-w-lg text-base leading-relaxed ${
-                    showcase.dark ? 'text-white/55' : 'text-brand-muted'
+                <h3
+                  className={`mt-3 font-display text-[clamp(1.875rem,4vw,3rem)] font-bold leading-[1.08] tracking-tight ${
+                    showcase.dark ? 'text-white' : 'text-brand-navy'
                   }`}
                 >
-                  {showcase.details}
-                </p>
-              )}
+                  {showcase.title}
+                </h3>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {showcase.stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className={`flex items-center gap-4 rounded-xl border px-5 py-4 transition-all duration-300 hover:-translate-y-0.5 ${
-                      showcase.dark
-                        ? 'border-white/10 bg-white/5 hover:border-brand-gold/30 hover:shadow-[0_8px_32px_rgba(201,162,39,0.1)]'
-                        : 'border-brand-navy/8 bg-white shadow-[0_4px_20px_rgba(7,26,53,0.06)] hover:shadow-[0_8px_32px_rgba(7,26,53,0.1)]'
+                <p
+                  className={`mt-5 max-w-xl text-base leading-relaxed md:text-lg ${
+                    showcase.dark ? 'text-white/70' : 'text-brand-muted'
+                  }`}
+                >
+                  {showcase.description}
+                </p>
+
+                {showLearnMore && (
+                  <p
+                    className={`mt-4 max-w-xl text-base leading-relaxed ${
+                      showcase.dark ? 'text-white/55' : 'text-brand-muted'
                     }`}
                   >
-                    <stat.icon
-                      className={`h-5 w-5 shrink-0 ${showcase.dark ? 'text-brand-gold' : 'text-brand-blue'}`}
-                      aria-hidden="true"
-                    />
-                    <span
-                      className={`text-[15px] font-semibold md:text-base ${
-                        showcase.dark ? 'text-white/90' : 'text-brand-text'
+                    {showcase.details}
+                  </p>
+                )}
+
+                <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                  {showcase.stats.map((stat) => (
+                    <div
+                      key={stat.label}
+                      className={`flex items-center gap-4 rounded-xl border px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 sm:px-5 sm:py-4 ${
+                        showcase.dark
+                          ? 'border-white/10 bg-white/5 hover:border-brand-gold/30 hover:shadow-[0_8px_32px_rgba(201,162,39,0.1)]'
+                          : 'border-brand-navy/8 bg-white shadow-[0_4px_20px_rgba(7,26,53,0.06)] hover:shadow-[0_8px_32px_rgba(7,26,53,0.1)]'
                       }`}
                     >
-                      {stat.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                      <stat.icon
+                        className={`h-5 w-5 shrink-0 ${showcase.dark ? 'text-brand-gold' : 'text-brand-blue'}`}
+                        aria-hidden="true"
+                      />
+                      <span
+                        className={`text-sm font-semibold sm:text-[15px] ${
+                          showcase.dark ? 'text-white/90' : 'text-brand-text'
+                        }`}
+                      >
+                        {stat.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
 
-              {showLearnMore && (
-                <Link
-                  href="/contact"
-                  className={`group mt-8 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 ${
-                    showcase.dark
-                      ? 'border border-white/30 bg-white/10 text-white hover:border-brand-gold/50 hover:bg-white/15'
-                      : 'bg-brand-blue text-white shadow-[0_8px_24px_rgba(37,99,235,0.28)] hover:-translate-y-0.5'
-                  }`}
-                  aria-label={`Learn more about ${showcase.title}`}
-                >
-                  Learn More
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                </Link>
-              )}
+                {showLearnMore && (
+                  <Link
+                    href={showcase.learnMoreHref}
+                    className={`group mt-8 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+                      showcase.dark
+                        ? 'border border-white/30 bg-white/10 text-white hover:border-brand-gold/50 hover:bg-white/15'
+                        : 'bg-brand-blue text-white shadow-[0_8px_24px_rgba(37,99,235,0.28)] hover:-translate-y-0.5'
+                    }`}
+                    aria-label={`Learn more about ${showcase.title}`}
+                  >
+                    Learn More
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </motion.div>
