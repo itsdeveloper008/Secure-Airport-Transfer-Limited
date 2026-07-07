@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
-import { addLead, readLeads, updateLeadStatus } from '@/lib/admin/dataStore';
 import type { CreateLeadInput, LeadStatus } from '@/lib/admin/types';
-import { isFirebaseAdminConfigured } from '@/lib/firebase/admin';
-import { unauthorizedResponse, verifyAdminToken } from '@/lib/firebase/verifyAdmin';
+import { isFirebaseAdminConfigured } from '@/lib/firebase/adminConfig';
 import { isValidUkPhone } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
+  const { verifyAdminToken, unauthorizedResponse } = await import('@/lib/firebase/verifyAdmin');
   if (!(await verifyAdminToken(request))) return unauthorizedResponse();
 
+  const { readLeads } = await import('@/lib/admin/dataStore');
   const leads = await readLeads();
   return NextResponse.json(leads);
 }
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
       );
     }
 
+    const { addLead } = await import('@/lib/admin/dataStore');
     const lead = await addLead({
       fullName: body.fullName.trim(),
       jobTitle: body.jobTitle.trim(),
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const { verifyAdminToken, unauthorizedResponse } = await import('@/lib/firebase/verifyAdmin');
   if (!(await verifyAdminToken(request))) return unauthorizedResponse();
 
   try {
@@ -73,6 +75,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Missing id or status' }, { status: 400 });
     }
 
+    const { updateLeadStatus } = await import('@/lib/admin/dataStore');
     const updated = await updateLeadStatus(id, status);
     if (!updated) {
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
