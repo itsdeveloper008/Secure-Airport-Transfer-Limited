@@ -7,12 +7,22 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
-  const { verifyAdminToken, unauthorizedResponse } = await import('@/lib/firebase/verifyAdmin');
-  if (!(await verifyAdminToken(request))) return unauthorizedResponse();
+  try {
+    const { verifyAdminToken, unauthorizedResponse } = await import('@/lib/firebase/verifyAdmin');
+    if (!(await verifyAdminToken(request))) return unauthorizedResponse();
 
-  const { readLeads } = await import('@/lib/admin/dataStore');
-  const leads = await readLeads();
-  return NextResponse.json(leads);
+    if (!isFirebaseAdminConfigured()) {
+      return NextResponse.json({ error: 'Server database is not configured.' }, { status: 503 });
+    }
+
+    const { readLeads } = await import('@/lib/admin/dataStore');
+    const leads = await readLeads();
+    return NextResponse.json(leads);
+  } catch (err) {
+    console.error('GET /api/leads:', err);
+    const message = err instanceof Error ? err.message : 'Failed to load leads';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {

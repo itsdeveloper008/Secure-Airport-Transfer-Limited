@@ -31,16 +31,12 @@ function docToLead(id: string, data: FirebaseFirestore.DocumentData): Lead {
 }
 
 export async function readLeads(): Promise<Lead[]> {
-  try {
-    const snapshot = await getDb()
-      .collection(LEADS_COLLECTION)
-      .orderBy('createdAt', 'desc')
-      .get();
+  const snapshot = await getDb()
+    .collection(LEADS_COLLECTION)
+    .orderBy('createdAt', 'desc')
+    .get();
 
-    return snapshot.docs.map((doc) => docToLead(doc.id, doc.data()));
-  } catch {
-    return [];
-  }
+  return snapshot.docs.map((doc) => docToLead(doc.id, doc.data()));
 }
 
 export async function addLead(

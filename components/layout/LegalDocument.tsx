@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { List } from 'lucide-react';
 import { parseSectionTitle, type LegalSection } from '@/lib/legalSections';
-
-const HEADER_OFFSET = 112;
 
 type LegalDocumentProps = {
   sections: LegalSection[];
@@ -14,36 +12,6 @@ type LegalDocumentProps = {
 
 export default function LegalDocument({ sections, intro, afterSections }: LegalDocumentProps) {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? '');
-  const [tocOffset, setTocOffset] = useState(0);
-  const layoutRef = useRef<HTMLDivElement>(null);
-  const tocRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const updateTocPosition = () => {
-      const layout = layoutRef.current;
-      const toc = tocRef.current;
-      if (!layout || !toc) return;
-
-      const layoutTop = layout.getBoundingClientRect().top + window.scrollY;
-      const scrolled = window.scrollY - layoutTop + HEADER_OFFSET;
-      const maxOffset = Math.max(0, layout.offsetHeight - toc.offsetHeight);
-
-      setTocOffset(Math.max(0, Math.min(scrolled, maxOffset)));
-    };
-
-    updateTocPosition();
-    window.addEventListener('scroll', updateTocPosition, { passive: true });
-    window.addEventListener('resize', updateTocPosition);
-
-    const ro = layoutRef.current ? new ResizeObserver(updateTocPosition) : null;
-    if (layoutRef.current) ro?.observe(layoutRef.current);
-
-    return () => {
-      window.removeEventListener('scroll', updateTocPosition);
-      window.removeEventListener('resize', updateTocPosition);
-      ro?.disconnect();
-    };
-  }, [sections]);
 
   useEffect(() => {
     if (!sections.length) return;
@@ -77,16 +45,9 @@ export default function LegalDocument({ sections, intro, afterSections }: LegalD
       <div className="zone mx-auto max-w-6xl">
         {intro}
 
-        <div
-          ref={layoutRef}
-          className="mt-10 lg:grid lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-14"
-        >
+        <div className="mt-10 lg:grid lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-14">
           <aside className="relative hidden lg:block" aria-label="Table of contents">
-            <nav
-              ref={tocRef}
-              style={{ transform: `translateY(${tocOffset}px)` }}
-              className="w-full rounded-2xl border border-brand-navy/[0.08] bg-white p-5 shadow-[0_10px_40px_rgba(7,26,53,0.07)] will-change-transform"
-            >
+            <nav className="sticky top-28 w-full rounded-2xl border border-brand-navy/[0.08] bg-white p-5 shadow-[0_10px_40px_rgba(7,26,53,0.07)]">
               <p className="flex items-center gap-2 font-accent text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-blue">
                 <List className="h-4 w-4 shrink-0" aria-hidden="true" />
                 On this page

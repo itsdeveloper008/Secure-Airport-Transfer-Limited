@@ -20,12 +20,10 @@ const columns = [
   {
     title: 'Company',
     links: [
-      { href: '/b2b-services', label: 'About Us' },
+      { href: '/about', label: 'About Us' },
       { href: '/technology-fleet', label: 'Technology & Fleet' },
       { href: '/careers', label: 'Careers' },
       { href: '/contact', label: 'Contact' },
-      { href: '/', label: 'Coverage Network' },
-      { href: '/', label: 'Nationwide Ops' },
     ],
   },
   {

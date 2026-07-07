@@ -17,12 +17,25 @@ export function useAdminLeads() {
 
     try {
       const res = await adminFetch('/api/leads', getIdToken);
-      if (res.status === 401) throw new Error('Unauthorized');
-      if (!res.ok) throw new Error('Failed to load leads');
+      if (res.status === 401) {
+        const retryRes = await adminFetch('/api/leads', async () => {
+          const auth = (await import('@/lib/firebase/client')).getClientAuth();
+          if (!auth.currentUser) return null;
+          return auth.currentUser.getIdToken(true);
+        });
+        if (!retryRes.ok) throw new Error('Session expired. Please sign in again.');
+        setLeads(await retryRes.json());
+        setError(null);
+        return;
+      }
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error ?? 'Failed to load leads');
+      }
       setLeads(await res.json());
       setError(null);
-    } catch {
-      setError('Could not load leads.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not load leads.');
       setLeads([]);
     } finally {
       setReady(true);
