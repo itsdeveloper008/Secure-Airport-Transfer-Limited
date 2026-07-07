@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import PageHero from '@/components/layout/PageHero';
+import LegalDocument from '@/components/layout/LegalDocument';
 import { COMPANY_LEGAL, REGISTERED_OFFICE, REGISTERED_OFFICE_FULL } from '@/lib/constants';
+import type { LegalSection } from '@/lib/legalSections';
 
 export const metadata = {
   title: 'Terms of Service | Secure Airport Transfer Limited',
@@ -8,7 +10,7 @@ export const metadata = {
     'Terms of service for corporate ground transport, B2B accounts, and nationwide airport transfer services.',
 };
 
-const sections = [
+const sections: LegalSection[] = [
   {
     id: 'agreement',
     title: '1. Agreement',
@@ -92,48 +94,37 @@ export default function TermsOfServicePage() {
         backgroundImage="/images/sector-corporate.jpg"
       />
 
-      <section className="section-block w-full bg-brand-white">
-        <div className="zone mx-auto max-w-3xl">
+      <LegalDocument
+        sections={sections}
+        intro={
           <p className="text-sm leading-relaxed text-brand-muted">
             Last updated: {new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
           </p>
+        }
+        afterSections={
+          <>
+            <div className="premium-card mt-12 p-8">
+              <h3 className="font-display text-lg font-semibold text-brand-navy">Registered Office</h3>
+              <address className="mt-3 not-italic text-sm leading-relaxed text-brand-muted">
+                {REGISTERED_OFFICE.line1}
+                <br />
+                {REGISTERED_OFFICE.line2}
+                <br />
+                {REGISTERED_OFFICE.line3}
+              </address>
+              <p className="mt-3 text-xs text-brand-muted">{REGISTERED_OFFICE_FULL}</p>
+            </div>
 
-          <div className="mt-10 space-y-10">
-            {sections.map((section) => (
-              <article key={section.id} id={section.id} className="scroll-mt-28">
-                <h2 className="font-display text-xl font-semibold text-brand-navy">{section.title}</h2>
-                <div className="mt-4 space-y-3">
-                  {section.body.map((paragraph) => (
-                    <p key={paragraph} className="text-sm leading-relaxed text-brand-muted">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="premium-card mt-12 p-8">
-            <h3 className="font-display text-lg font-semibold text-brand-navy">Registered Office</h3>
-            <address className="mt-3 not-italic text-sm leading-relaxed text-brand-muted">
-              {REGISTERED_OFFICE.line1}
-              <br />
-              {REGISTERED_OFFICE.line2}
-              <br />
-              {REGISTERED_OFFICE.line3}
-            </address>
-            <p className="mt-3 text-xs text-brand-muted">{REGISTERED_OFFICE_FULL}</p>
-          </div>
-
-          <p className="mt-10 text-sm text-brand-muted">
-            See also our{' '}
-            <Link href="/privacy-policy" className="font-medium text-brand-blue hover:underline">
-              Privacy Policy
-            </Link>
-            .
-          </p>
-        </div>
-      </section>
+            <p className="mt-10 text-sm text-brand-muted">
+              See also our{' '}
+              <Link href="/privacy-policy" className="font-medium text-brand-blue hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+          </>
+        }
+      />
     </>
   );
 }
