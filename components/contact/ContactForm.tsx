@@ -23,6 +23,7 @@ import {
   SPEND_OPTIONS,
 } from '@/lib/contactContent';
 import { isValidUkPhone, UK_PHONE_HINT } from '@/lib/validation';
+import { submitLead } from '@/lib/submitLead';
 
 type FormData = {
   fullName: string;
@@ -281,6 +282,10 @@ export default function ContactForm() {
       if (formData.phone && !isValidUkPhone(formData.phone)) {
         setPhoneError(UK_PHONE_HINT);
       }
+      if (hubs.length === 0) {
+        setSubmitError('Please select at least one airport hub before submitting.');
+        return;
+      }
       setSubmitError('Please complete all required fields before submitting.');
       return;
     }
@@ -290,24 +295,13 @@ export default function ContactForm() {
     setPhoneError(null);
 
     try {
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, hubs, details: formData.details }),
-      });
-
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
-
-      if (!res.ok) {
-        throw new Error(data?.error ?? 'Submit failed');
-      }
-
+      await submitLead({ ...formData, hubs, details: formData.details });
       setSubmitted(true);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Submit failed';
       setSubmitError(
         message === 'Submit failed'
-          ? 'Could not submit your enquiry. Please try again or email us directly.'
+          ? `Could not submit your enquiry. Please try again or email us at ${CONTACT_EMAIL}.`
           : message,
       );
     } finally {

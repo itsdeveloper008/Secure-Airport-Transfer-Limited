@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /leads/{leadId} {
+      allow create: if
+        request.resource.data.keys().hasAll([
+          'fullName',
+          'jobTitle',
+          'companyName',
+          'email',
+          'phone',
+          'spend',
+          'enquiry',
+          'hubs',
+          'details',
+          'status',
+          'createdAt',
+        ])
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() > 0
+        && request.resource.data.fullName.size() <= 120
+        && request.resource.data.jobTitle is string
+        && request.resource.data.jobTitle.size() > 0
+        && request.resource.data.companyName is string
+        && request.resource.data.companyName.size() > 0
+        && request.resource.data.email is string
+        && request.resource.data.email.matches('^.+@.+\\..+$')
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() >= 10
+        && request.resource.data.spend is string
+        && request.resource.data.enquiry is string
+        && request.resource.data.hubs is list
+        && request.resource.data.hubs.size() > 0
+        && request.resource.data.details is string
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt is string;
+
+      allow read, update, delete: if false;
+    }
+
+    match /settings/{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

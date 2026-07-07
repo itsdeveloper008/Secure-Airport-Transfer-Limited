@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { addLead, readLeads, updateLeadStatus } from '@/lib/admin/dataStore';
 import type { CreateLeadInput, LeadStatus } from '@/lib/admin/types';
+import { isFirebaseAdminConfigured } from '@/lib/firebase/admin';
 import { unauthorizedResponse, verifyAdminToken } from '@/lib/firebase/verifyAdmin';
 import { isValidUkPhone } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
   if (!(await verifyAdminToken(request))) return unauthorizedResponse();
@@ -35,6 +37,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'A valid UK phone number is required.' }, { status: 400 });
     }
 
+    if (!isFirebaseAdminConfigured()) {
+      return NextResponse.json(
+        { error: 'Server storage is not configured. Retrying via backup.' },
+        { status: 503 },
+      );
+    }
+
     const lead = await addLead({
       fullName: body.fullName.trim(),
       jobTitle: body.jobTitle.trim(),
@@ -50,7 +59,8 @@ export async function POST(request: Request) {
     return NextResponse.json(lead, { status: 201 });
   } catch (err) {
     console.error('POST /api/leads:', err);
-    return NextResponse.json({ error: 'Failed to save lead' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Failed to save lead';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
