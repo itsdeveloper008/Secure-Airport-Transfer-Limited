@@ -87,3 +87,26 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  const { verifyAdminToken, unauthorizedResponse } = await import('@/lib/firebase/verifyAdmin');
+  if (!(await verifyAdminToken(request))) return unauthorizedResponse();
+
+  try {
+    const { id } = (await request.json()) as { id: string };
+    if (!id) {
+      return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+    }
+
+    const { deleteLead } = await import('@/lib/admin/dataStore');
+    const deleted = await deleteLead(id);
+    if (!deleted) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error('DELETE /api/leads:', err);
+    return NextResponse.json({ error: 'Failed to delete lead' }, { status: 500 });
+  }
+}

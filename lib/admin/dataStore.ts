@@ -66,6 +66,16 @@ export async function updateLeadStatus(id: string, status: Lead['status']): Prom
   return docToLead(doc.id, { ...doc.data(), status });
 }
 
+export async function deleteLead(id: string): Promise<boolean> {
+  const ref = getDb().collection(LEADS_COLLECTION).doc(id);
+  const doc = await ref.get();
+
+  if (!doc.exists) return false;
+
+  await ref.delete();
+  return true;
+}
+
 export async function readSettings(): Promise<AdminSettings> {
   try {
     const doc = await getDb().doc(SETTINGS_DOC).get();

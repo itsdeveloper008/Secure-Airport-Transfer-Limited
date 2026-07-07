@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Mail, Phone, Search, X } from 'lucide-react';
+import { Mail, Phone, Search, Trash2, X } from 'lucide-react';
 import StatusBadge from '@/components/admin/StatusBadge';
 import { formatLeadDate } from '@/lib/admin/leadsUtils';
 import { useAdminLeads } from '@/lib/admin/storage';
@@ -11,10 +11,11 @@ import { LEAD_STATUS_LABELS } from '@/lib/admin/types';
 const filters: Array<LeadStatus | 'all'> = ['all', 'new', 'contacted', 'qualified', 'closed'];
 
 export default function LeadsTable() {
-  const { leads, ready, error, updateStatus } = useAdminLeads();
+  const { leads, ready, error, updateStatus, removeLead } = useAdminLeads();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
   const [selected, setSelected] = useState<Lead | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -222,6 +223,31 @@ export default function LeadsTable() {
               </div>
 
               <p className="text-xs text-brand-muted">Received {formatLeadDate(selected.createdAt)}</p>
+
+              <div className="border-t border-gray-100 pt-5">
+                <button
+                  type="button"
+                  disabled={deleting}
+                  onClick={async () => {
+                    if (
+                      !window.confirm(
+                        `Delete enquiry from ${selected.fullName} at ${selected.companyName}? This cannot be undone.`,
+                      )
+                    ) {
+                      return;
+                    }
+
+                    setDeleting(true);
+                    const ok = await removeLead(selected.id);
+                    setDeleting(false);
+                    if (ok) setSelected(null);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:opacity-60"
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden="true" />
+                  {deleting ? 'Deleting…' : 'Delete lead'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

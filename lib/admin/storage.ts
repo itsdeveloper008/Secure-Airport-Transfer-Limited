@@ -52,7 +52,20 @@ export function useAdminLeads() {
     [getIdToken],
   );
 
-  return { leads, ready, error, refresh, updateStatus };
+  const removeLead = useCallback(
+    async (id: string) => {
+      const res = await adminFetch('/api/leads', getIdToken, {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) return false;
+      setLeads((prev) => prev.filter((l) => l.id !== id));
+      return true;
+    },
+    [getIdToken],
+  );
+
+  return { leads, ready, error, refresh, updateStatus, removeLead };
 }
 
 export function useAdminSettings() {
