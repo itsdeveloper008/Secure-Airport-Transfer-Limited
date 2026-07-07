@@ -26,7 +26,7 @@ const showcases = [
     details:
       'Mercedes S-Class and E-Class vehicles are maintained to corporate standards with professional chauffeurs, climate control, Wi-Fi on request, and discreet branding. Ideal for airport transfers, city-to-city executive travel, and board-level appointments.',
     homeImage: '/images/service-ser-1.png',
-    pageImage: '/images/tech-fleet-saloon.jpg',
+    pageImage: '/images/tech-fleet-saloon.png',
     learnMoreHref: `/technology-fleet/${fleetSlugs['Executive Saloon Fleet']}`,
     bg: 'bg-brand-white',
     dark: false,

@@ -165,7 +165,7 @@ export const technologyDetails: TechnologyDetail[] = [
     label: 'EXECUTIVE FLEET',
     title: 'Executive Saloon Fleet',
     subtitle: 'Mercedes S-Class and E-Class for corporate airport transfers.',
-    image: '/images/tech-fleet-saloon.jpg',
+    image: '/images/tech-fleet-saloon.png',
     intro:
       'The preferred choice for senior executives and business travellers. Premium saloon vehicles maintained to corporate standards with professional chauffeurs across UK aviation hubs.',
     features: [
