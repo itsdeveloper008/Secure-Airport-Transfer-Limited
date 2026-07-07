@@ -45,38 +45,50 @@ export async function submitLeadViaFirestore(input: CreateLeadInput): Promise<Su
 }
 
 export async function submitLead(input: CreateLeadInput): Promise<SubmitLeadResult> {
-  try {
-    const res = await fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
-    });
+  if (isClientFirebaseConfigured()) {
+    try {
+      return await submitLeadViaFirestore(input);
+    } catch (clientErr) {
+      const clientMessage =
+        clientErr instanceof Error ? clientErr.message : 'Firestore submit failed';
 
-    if (res.ok) {
-      const lead = (await res.json()) as Lead;
-      return { id: lead.id, createdAt: lead.createdAt };
-    }
-
-    const apiError = await parseApiError(res);
-
-    if (isClientFirebaseConfigured() && (res.status === 500 || res.status === 503)) {
       try {
-        return await submitLeadViaFirestore(input);
-      } catch {
-        throw new Error(apiError);
+        const res = await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        });
+
+        if (res.ok) {
+          const lead = (await res.json()) as Lead;
+          return { id: lead.id, createdAt: lead.createdAt };
+        }
+
+        const apiError = await parseApiError(res);
+        throw new Error(apiError || clientMessage);
+      } catch (apiErr) {
+        if (apiErr instanceof Error && apiErr.message !== 'Submit failed') {
+          throw apiErr;
+        }
+        throw new Error(
+          clientMessage.includes('permission')
+            ? 'Could not save your enquiry. Please try again in a moment.'
+            : clientMessage,
+        );
       }
     }
-
-    throw new Error(apiError);
-  } catch (err) {
-    if (err instanceof Error && err.message !== 'Submit failed' && err.message !== 'Failed to fetch') {
-      throw err;
-    }
-
-    if (isClientFirebaseConfigured()) {
-      return submitLeadViaFirestore(input);
-    }
-
-    throw new Error('Submit failed');
   }
+
+  const res = await fetch('/api/leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+  if (res.ok) {
+    const lead = (await res.json()) as Lead;
+    return { id: lead.id, createdAt: lead.createdAt };
+  }
+
+  throw new Error(await parseApiError(res));
 }
